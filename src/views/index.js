@@ -11,6 +11,7 @@ import { Example } from "./dependants/Example/Example";
 import { UsersManager } from "./dependants/UsersManager/UsersManager";
 import { EnvironmentManager } from "./dependants/EnvironmentManager/EnvironmentManager";
 import { ObjectManager } from "./dependants/ObjectManager/ObjectManager";
+import { EnvironmentPreview } from "./dependants/EnvironmentPreview/EnvironmentPreview";
 export {
   Example,
   Login,
@@ -22,4 +23,5 @@ export {
   UsersManager,
   EnvironmentManager,
   ObjectManager,
+  EnvironmentPreview
 };

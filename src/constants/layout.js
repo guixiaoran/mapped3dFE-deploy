@@ -66,6 +66,14 @@ class Layout {
           isFavourite: true,
         }),
         new MenuItem({
+          name: "Environment Preview",
+          type: "button",
+          icon: "bytesize:user",
+          helpingAttribute: "/preview",
+          customTitle: "Environment Preview",
+          isFavourite: true,
+        }),
+        new MenuItem({
           name: "Logout",
           type: "logout",
           icon: "fe:logout",

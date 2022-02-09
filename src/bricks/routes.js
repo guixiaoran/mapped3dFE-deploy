@@ -18,7 +18,9 @@ import {
   UsersManager,
   EnvironmentManager,
   ObjectManager,
+  EnvironmentPreview,
 } from "views";
+
 import { Layout } from "./layout";
 
 const AuthRoute = ({ children, redirectTo, parentProps, loginStatus }) => {
@@ -181,6 +183,22 @@ export const AppRoutes = (props) => {
             <Layout>
               {" "}
               <FourOFour {...props} />
+            </Layout>
+          </AuthRoute>
+        }
+      />
+      <Route
+        exact
+        path="/preview"
+        element={
+          <AuthRoute
+            redirectTo="/login"
+            loginStatus={loginStatus}
+            parentProps={props}
+          >
+            <Layout>
+              {" "}
+              <EnvironmentPreview {...props} />
             </Layout>
           </AuthRoute>
         }
