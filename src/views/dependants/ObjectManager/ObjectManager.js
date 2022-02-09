@@ -21,25 +21,25 @@ export const ObjectManager = () => {
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [s3url, setS3url] = useState("");
   // get objects
-  const [objects, setObjects] = useState();
+  // const [objects, setObjects] = useState();
   const [PublicObjects, setPublicObjects] = useState([]);
   const isMounted = useIsMountedRef();
   // create public object
   const [creatObjectModal, setCreatObjectModal] = useState(false);
   //getLocalObjects
-  const getLocalObjects = useCallback(async () => {
-    try {
-      const response = await API.getLocalObjects();
-      console.log("res----->", response.data.data);
-      if (response.success) setObjects(response.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [isMounted]);
+  // const getLocalObjects = useCallback(async () => {
+  //   try {
+  //     const response = await API.getLocalObjects();
+  //     console.log("res----->", response.data.data);
+  //     if (response.success) setObjects(response.data.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, [isMounted]);
 
-  useEffect(() => {
-    getLocalObjects();
-  }, [getLocalObjects]);
+  // useEffect(() => {
+  //   getLocalObjects();
+  // }, [getLocalObjects]);
   //getPublicObjects
   const getPublicObjects = useCallback(async () => {
     try {
@@ -246,7 +246,7 @@ export const ObjectManager = () => {
             ],
           }}
         />
-        <EnhancedTable
+        {/* <EnhancedTable
           data={objects}
           title="Local Objects Manager"
           options={{
@@ -260,7 +260,7 @@ export const ObjectManager = () => {
               "createdAt",
             ],
           }}
-        />
+        /> */}
       </Container>
     </Box>
   );
