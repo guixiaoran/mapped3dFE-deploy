@@ -4,9 +4,9 @@ class Connection {
     this.socket = {
       "initSocket": false,
       "socketDefaultOptions": {},
-      "accessTokenVerification": false
+      "accessTokenVerification": true
     };
-    this.bypassBackend = true;
+    this.bypassBackend = false;
     this.useDeakinSSO = false;
     this.useACL = false;
   }
