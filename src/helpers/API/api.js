@@ -132,6 +132,18 @@ class API {
       })
       .catch((error) => errorHelper(error));
   }
+  getEnvironmentById(_id) {
+    return axiosInstance
+      .get(`environment/getEnvironmentById/${_id}`, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then((response) => {
+        return generateSuccess(response.data.data);
+      })
+      .catch((error) => errorHelper(error));
+  }
   createEnvironment(data) {
     return axiosInstance
       .post("environment/createEnvironment", data, {
@@ -198,7 +210,7 @@ class API {
   }
   deleteLocalObject(_id) {
     return axiosInstance
-      .delete(`object/deleteLocalObject/${_id}`, {
+      .delete(`object/deleteLocalObjectItem/${_id}`, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
@@ -208,7 +220,7 @@ class API {
   }
   updateLocalObject(_id, data) {
     return axiosInstance
-      .put(`object/updateLocalObject/${_id}`, data, {
+      .put(`object/updateLocalObjectItem/${_id}`, data, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },

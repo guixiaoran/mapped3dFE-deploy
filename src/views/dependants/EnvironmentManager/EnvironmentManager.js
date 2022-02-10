@@ -27,13 +27,14 @@ export const EnvironmentManager = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   // env detail
   const [envModal, setEnvModal] = useState(false);
+  const [thisEnvDetail, setThisEnvDetail] = useState([]);
   const [currentEnv, setCurrentEnv] = useState("");
   //addObjectToEnvModal
   const [addObjectToEnvModal, setaddObjectToEnvModal] = useState(false);
   const [PublicObjects, setPublicObjects] = useState([]);
   const [selectedPublicObject, setselectedPublicObject] = useState("");
   //show objects
-  const [objects, setObjects] = useState([]);
+  // const [objects, setObjects] = useState([]);
   // updateObjectModal
   const [updateObjectModal, setUpdateObjectModal] = useState(false);
   const [currentObject, setCurrentObject] = useState("");
@@ -94,7 +95,7 @@ export const EnvironmentManager = () => {
     try {
       const response = await API.deleteLocalObject(_id);
       if (response.success) {
-        getLocalObjects();
+        // getLocalObjects();
         notify("deleteLocalObject  successed");
       } else {
         notify("deleteLocalObject  Failed");
@@ -117,7 +118,7 @@ export const EnvironmentManager = () => {
         formikUpt.values.rotation = "";
         formikUpt.values.url = "";
         // setModalIsOpen(false);
-        getLocalObjects();
+        // getLocalObjects();
         notify("updateLocalObject successed");
       } else {
         notify("updateLocalObject  Failed");
@@ -218,7 +219,7 @@ export const EnvironmentManager = () => {
           };
           console.log(data);
           updateLocalObject(currentObject._id, data);
-          getLocalObjects();
+          // getLocalObjects();
           setUpdateObjectModal(false);
         }}
       >
@@ -243,9 +244,9 @@ export const EnvironmentManager = () => {
         formik.values.floorColor = "";
         formik.values.skyColor = "";
         formik.values.skyUrl = "";
-        formik.values.localObjectsId = "";
+        // formik.values.localObjectsId = "";
         setModalIsOpen(false);
-        getLocalObjects();
+        // getLocalObjects();
         notify("environment Creation successed");
       } else {
         notify("environment Creation Failed");
@@ -264,7 +265,7 @@ export const EnvironmentManager = () => {
       floorColor: "",
       skyColor: "",
       skyUrl: "",
-      localObjectsId: "",
+      // localObjectsId: "",
     },
     validationSchema: () => {
       return Yup.object().shape({
@@ -280,7 +281,7 @@ export const EnvironmentManager = () => {
         floorColor: Yup.string().max(255),
         skyColor: Yup.string().max(255),
         skyUrl: Yup.string().max(255),
-        localObjectsId: Yup.string().max(255),
+        // localObjectsId: Yup.string().max(255),
       });
     },
     onSubmit: async (values) => {
@@ -293,7 +294,7 @@ export const EnvironmentManager = () => {
         floorColor: values.floorColor,
         skyColor: values.skyColor,
         skyUrl: values.skyUrl,
-        localObjectsId: values.localObjectsId,
+        // localObjectsId: values.localObjectsId,
       };
       console.log(data);
       createEnvironment(data);
@@ -421,24 +422,6 @@ export const EnvironmentManager = () => {
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <TextField
-            fullWidth
-            label="localObjectsId"
-            margin="normal"
-            name="localObjectsId"
-            type="text"
-            value={formik.values.localObjectsId}
-            variant="outlined"
-            error={
-              formik.touched.localObjectsId &&
-              Boolean(formik.errors.localObjectsId)
-            }
-            helperText={
-              formik.touched.localObjectsId && formik.errors.localObjectsId
-            }
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
 
           <Box sx={{ mt: 2 }}>
             <Button
@@ -466,7 +449,7 @@ export const EnvironmentManager = () => {
         console.log(environments);
       } else {
         setEnvironments([]);
-        notify("Failed to Fetch Job List");
+        notify("Failed to Fetch Env List");
       }
     } catch (err) {
       console.log(err);
@@ -476,20 +459,25 @@ export const EnvironmentManager = () => {
   useEffect(() => {
     getEnvironments();
   }, [getEnvironments]);
-  //get local objects
-  const getLocalObjects = useCallback(async () => {
-    try {
-      const response = await API.getLocalObjects();
-      console.log("res----->", response.data.data);
-      if (response.success) setObjects(response.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [isMounted]);
 
-  useEffect(() => {
-    getLocalObjects();
-  }, [getLocalObjects]);
+  const getEnvironmentById = useCallback(
+    async (_id) => {
+      try {
+        const response = await API.getEnvironmentById(_id);
+        console.log("in this ID", _id);
+        if (response.success) {
+          setThisEnvDetail(response.data.localObjects);
+          console.log("in thisEnvDetail :", thisEnvDetail);
+        } else {
+          setEnvironments([]);
+          notify("Failed to Fetch Env List");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [isMounted]
+  );
 
   // get public object
   const getPublicObjects = useCallback(async () => {
@@ -586,7 +574,7 @@ export const EnvironmentManager = () => {
           };
           console.log(data);
           createLocalObject(data);
-          getLocalObjects();
+          // getLocalObjects();
           setaddObjectToEnvModal(false);
         }}
       >
@@ -617,94 +605,87 @@ export const EnvironmentManager = () => {
         Add Object
       </Button>
       <Container>
-        {/* {setObjectsInEnv(
-          objects.filter((obj) => {
-            console.log("id---", obj.environmentId, currentEnv._id);
-            return obj.environmentId === currentEnv._id;
-          })
-        )} */}
-        {objects.length > 0 ? (
-          objects.map((data) => {
-            if (data.environmentId === currentEnv._id)
-              return (
-                <Box key={data._id} mb={4}>
-                  <Card width={50}>
-                    <CardContent>
-                      <div style={{ width: 300, whiteSpace: "nowrap" }}>
-                        <Typography
-                          component="div"
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                          gutterBottom
-                        >
-                          Object Name: {data.objectName}
-                        </Typography>
-                        <Typography
-                          component="div"
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                          gutterBottom
-                        >
-                          Position: {data.position}
-                        </Typography>
-                        <Typography
-                          component="div"
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                          gutterBottom
-                        >
-                          Scale:{data.scale}
-                        </Typography>
-                        <Typography
-                          component="div"
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                          gutterBottom
-                        >
-                          Rotation:{data.Rotation}
-                        </Typography>
-                        <Typography
-                          component="div"
-                          sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                          gutterBottom
-                        >
-                          S3 Link: {data.url}
-                        </Typography>
-                      </div>
-                    </CardContent>
-                    <CardActions>
-                      <Button
-                        size="small"
-                        onClick={() => {
-                          setUpdateObjectModal(true);
-                          setCurrentObject(data._id);
+        {thisEnvDetail.length > 0 ? (
+          thisEnvDetail.map((data) => {
+            return (
+              <Box key={data._id} mb={4}>
+                <Card width={50}>
+                  <CardContent>
+                    <div style={{ width: 300, whiteSpace: "nowrap" }}>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
                         }}
+                        gutterBottom
                       >
-                        Update
-                      </Button>
-                      <Button
-                        size="small"
-                        onClick={() => {
-                          deleteLocalObject(data._id);
+                        Object Name: {data.objectName}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
                         }}
+                        gutterBottom
                       >
-                        Delete
-                      </Button>
-                    </CardActions>
-                  </Card>{" "}
-                </Box>
-              );
+                        Position: {data.position}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Scale:{data.scale}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Rotation:{data.Rotation}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        S3 Link: {data.url}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setUpdateObjectModal(true);
+                        setCurrentObject(data._id);
+                      }}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        deleteLocalObject(data._id);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </CardActions>
+                </Card>{" "}
+              </Box>
+            );
           })
         ) : (
           <Typography>No Data Available</Typography>
@@ -790,6 +771,8 @@ export const EnvironmentManager = () => {
                     onClick={() => {
                       setEnvModal(true);
                       setCurrentEnv(data);
+                      console.log("env id: ---", data._id);
+                      getEnvironmentById(data._id);
                     }}
                   >
                     Manage Objects
