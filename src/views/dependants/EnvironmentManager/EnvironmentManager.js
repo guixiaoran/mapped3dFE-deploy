@@ -38,7 +38,22 @@ export const EnvironmentManager = () => {
   // updateObjectModal
   const [updateObjectModal, setUpdateObjectModal] = useState(false);
   const [currentObject, setCurrentObject] = useState("");
-  // const test =['panorama','preset','video','default'];
+  // choose Environment Type when create a new environment
+  const EnvironmentType = [
+    "Panorama(360 video)",
+    "360 Image",
+    "Preset Environment",
+    "Default",
+  ];
+  const presetOptions = [
+    "Env1-ocean",
+    "Env2-forest",
+    "Env3-room",
+    "Env4-road",
+    "Env5-Egypt",
+  ];
+  const [envType, setEnvType] = useState("");
+  const [choosenPreset, setChoosenPreset] = useState("");
 
   // createLocalObject
   const createLocalObject = async (data) => {
@@ -255,6 +270,7 @@ export const EnvironmentManager = () => {
     try {
       const response = await API.createEnvironment(data);
       if (response.success) {
+        getEnvironments();
         formik.values.environmentName = "";
         formik.values.environmentCreator = "";
         formik.values.panorama = "";
@@ -263,9 +279,7 @@ export const EnvironmentManager = () => {
         formik.values.floorColor = "";
         formik.values.skyColor = "";
         formik.values.skyUrl = "";
-        // formik.values.localObjectsId = "";
         setModalIsOpen(false);
-        // getLocalObjects();
         notify("environment Creation successed");
       } else {
         notify("environment Creation Failed");
@@ -278,7 +292,7 @@ export const EnvironmentManager = () => {
     initialValues: {
       environmentName: "",
       environmentCreator: "",
-      panorama: "",
+      panorama: "false",
       preset: "",
       video: "",
       floorColor: "",
@@ -319,74 +333,74 @@ export const EnvironmentManager = () => {
       createEnvironment(data);
     },
   });
+  const handleTypeChange = (event) => {
+    setEnvType(event.target.value);
+    if (event.target.value === EnvironmentType[1]) {
+      formik.values.panorama = "true";
+    } else {
+      formik.values.panorama = "false";
+    }
+    console.log(formik.values.panorama, "pr");
+  };
+
+  const handlePresetChange = (event) => {
+    setChoosenPreset(event.target.value);
+    formik.values.preset = event.target.value;
+    console.log("event.target.value:", event.target.value);
+  };
 
   let createEnvorionmentModal = (
     <Box>
-      <Formik initialValues={formik.initialValues}>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            label="Environment Name"
-            margin="normal"
-            name="environmentName"
-            type="text"
-            value={formik.values.environmentName}
-            variant="outlined"
-            error={
-              formik.touched.environmentName &&
-              Boolean(formik.errors.environmentName)
-            }
-            helperText={
-              formik.touched.environmentName && formik.errors.environmentName
-            }
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="environmentCreator Name"
-            margin="normal"
-            name="environmentCreator"
-            type="text"
-            value={formik.values.environmentCreator}
-            variant="outlined"
-            error={
-              formik.touched.environmentCreator &&
-              Boolean(formik.errors.environmentCreator)
-            }
-            helperText={
-              formik.touched.environmentCreator &&
-              formik.errors.environmentCreator
-            }
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="panorama "
-            margin="normal"
-            name="panorama"
-            type="text"
-            value={formik.values.panorama}
-            variant="outlined"
-            error={formik.touched.panorama && Boolean(formik.errors.panorama)}
-            helperText={formik.touched.panorama && formik.errors.panorama}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="preset "
-            margin="normal"
-            name="preset"
-            type="text"
-            value={formik.values.preset}
-            variant="outlined"
-            error={formik.touched.preset && Boolean(formik.errors.preset)}
-            helperText={formik.touched.preset && formik.errors.preset}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
+      <FormControl fullWidth>
+        <TextField
+          fullWidth
+          label="Environment Name"
+          margin="normal"
+          name="environmentName"
+          type="text"
+          value={formik.values.environmentName}
+          variant="outlined"
+          error={
+            formik.touched.environmentName &&
+            Boolean(formik.errors.environmentName)
+          }
+          helperText={
+            formik.touched.environmentName && formik.errors.environmentName
+          }
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+        />
+        <TextField
+          fullWidth
+          label="environmentCreator Name"
+          margin="normal"
+          name="environmentCreator"
+          type="text"
+          value={formik.values.environmentCreator}
+          variant="outlined"
+          error={
+            formik.touched.environmentCreator &&
+            Boolean(formik.errors.environmentCreator)
+          }
+          helperText={
+            formik.touched.environmentCreator &&
+            formik.errors.environmentCreator
+          }
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+        />
+        {/* <InputLabel>Choose Environment Type</InputLabel> */}
+
+        <Select value={envType} label="Env" onChange={handleTypeChange}>
+          {EnvironmentType.map((data, i) => {
+            return (
+              <MenuItem value={data} key={i}>
+                {data}
+              </MenuItem>
+            );
+          })}
+        </Select>
+        {envType === EnvironmentType[0] ? (
           <TextField
             fullWidth
             label="video "
@@ -400,62 +414,82 @@ export const EnvironmentManager = () => {
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <TextField
-            fullWidth
-            label="floorColor"
-            margin="normal"
-            name="floorColor"
-            type="text"
-            value={formik.values.floorColor}
-            variant="outlined"
-            error={
-              formik.touched.floorColor && Boolean(formik.errors.floorColor)
-            }
-            helperText={formik.touched.floorColor && formik.errors.floorColor}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="skyColor"
-            margin="normal"
-            name="skyColor"
-            type="text"
-            value={formik.values.skyColor}
-            variant="outlined"
-            error={formik.touched.skyColor && Boolean(formik.errors.skyColor)}
-            helperText={formik.touched.skyColor && formik.errors.skyColor}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="skyUrl"
-            margin="normal"
-            name="skyUrl"
-            type="text"
-            value={formik.values.skyUrl}
-            variant="outlined"
-            error={formik.touched.skyUrl && Boolean(formik.errors.skyUrl)}
-            helperText={formik.touched.skyUrl && formik.errors.skyUrl}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-
-          <Box sx={{ mt: 2 }}>
-            <Button
-              color="primary"
-              disabled={formik.isSubmitting}
-              size="large"
-              variant="contained"
-              type="submit"
-              onClick={() => setModalIsOpen(false)}
-            >
-              Create Environment
-            </Button>
+        ) : envType === EnvironmentType[1] ? (
+          <Box>
+            {" "}
+            <TextField
+              fullWidth
+              label="skyUrl"
+              margin="normal"
+              name="skyUrl"
+              type="text"
+              value={formik.values.skyUrl}
+              variant="outlined"
+              error={formik.touched.skyUrl && Boolean(formik.errors.skyUrl)}
+              helperText={formik.touched.skyUrl && formik.errors.skyUrl}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
           </Box>
-        </form>
-      </Formik>
+        ) : envType === EnvironmentType[2] ? (
+          <Select
+            label="preset"
+            onChange={handlePresetChange}
+            value={choosenPreset}
+          >
+            {presetOptions.map((data, i) => {
+              return (
+                <MenuItem value={data} key={i}>
+                  {data}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        ) : envType === EnvironmentType[3] ? (
+          <Box>
+            <TextField
+              fullWidth
+              label="skyColor"
+              margin="normal"
+              name="skyColor"
+              type="text"
+              value={formik.values.skyColor}
+              variant="outlined"
+              error={formik.touched.skyColor && Boolean(formik.errors.skyColor)}
+              helperText={formik.touched.skyColor && formik.errors.skyColor}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />{" "}
+            <TextField
+              fullWidth
+              label="floorColor"
+              margin="normal"
+              name="floorColor"
+              type="text"
+              value={formik.values.floorColor}
+              variant="outlined"
+              error={
+                formik.touched.floorColor && Boolean(formik.errors.floorColor)
+              }
+              helperText={formik.touched.floorColor && formik.errors.floorColor}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
+          </Box>
+        ) : null}
+      </FormControl>
+      <Box sx={{ mt: 2 }}>
+        <Button
+          color="primary"
+          disabled={formik.isSubmitting}
+          size="large"
+          variant="contained"
+          type="submit"
+          onClick={() => createEnvironment(formik.values)}
+        >
+          Create Environment
+        </Button>
+      </Box>
     </Box>
   );
 
@@ -533,8 +567,6 @@ export const EnvironmentManager = () => {
             );
           })}
         </Select>
-        {/* {console.log("selectedPublicObject1", selectedPublicObject.url)}
-        {console.log("currentEnv", currentEnv)} */}
       </FormControl>
       <Formik initialValues={formik.initialValues}>
         <form noValidate onSubmit={formik.handleSubmit}>
@@ -616,7 +648,6 @@ export const EnvironmentManager = () => {
       </Button>
     </Container>
   );
-
   let envDetail = (
     <Container>
       <EnhancedModal
@@ -765,7 +796,7 @@ export const EnvironmentManager = () => {
                       }}
                       gutterBottom
                     >
-                      Panorama:{data.panorama}
+                      Panorama:{data.panorama.toString()}
                     </Typography>
                     <Typography
                       component="div"
@@ -775,7 +806,7 @@ export const EnvironmentManager = () => {
                       }}
                       gutterBottom
                     >
-                      Panorama:{data.panorama}
+                      Preset:{data.preset}
                     </Typography>
                     <Typography
                       component="div"
@@ -785,17 +816,7 @@ export const EnvironmentManager = () => {
                       }}
                       gutterBottom
                     >
-                      Preset:{data.Preset}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      }}
-                      gutterBottom
-                    >
-                      Video:{data.Video}
+                      Video:{data.video}
                     </Typography>
                   </div>
                 </CardContent>
@@ -895,3 +916,139 @@ export const EnvironmentManager = () => {
     </Box>
   );
 };
+{
+  /* <Formik initialValues={formik.initialValues}>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <TextField
+            fullWidth
+            label="Environment Name"
+            margin="normal"
+            name="environmentName"
+            type="text"
+            value={formik.values.environmentName}
+            variant="outlined"
+            error={
+              formik.touched.environmentName &&
+              Boolean(formik.errors.environmentName)
+            }
+            helperText={
+              formik.touched.environmentName && formik.errors.environmentName
+            }
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="environmentCreator Name"
+            margin="normal"
+            name="environmentCreator"
+            type="text"
+            value={formik.values.environmentCreator}
+            variant="outlined"
+            error={
+              formik.touched.environmentCreator &&
+              Boolean(formik.errors.environmentCreator)
+            }
+            helperText={
+              formik.touched.environmentCreator &&
+              formik.errors.environmentCreator
+            }
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="panorama "
+            margin="normal"
+            name="panorama"
+            type="text"
+            value={formik.values.panorama}
+            variant="outlined"
+            error={formik.touched.panorama && Boolean(formik.errors.panorama)}
+            helperText={formik.touched.panorama && formik.errors.panorama}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="preset "
+            margin="normal"
+            name="preset"
+            type="text"
+            value={formik.values.preset}
+            variant="outlined"
+            error={formik.touched.preset && Boolean(formik.errors.preset)}
+            helperText={formik.touched.preset && formik.errors.preset}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="video "
+            margin="normal"
+            name="video"
+            type="text"
+            value={formik.values.video}
+            variant="outlined"
+            error={formik.touched.video && Boolean(formik.errors.video)}
+            helperText={formik.touched.video && formik.errors.video}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="floorColor"
+            margin="normal"
+            name="floorColor"
+            type="text"
+            value={formik.values.floorColor}
+            variant="outlined"
+            error={
+              formik.touched.floorColor && Boolean(formik.errors.floorColor)
+            }
+            helperText={formik.touched.floorColor && formik.errors.floorColor}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="skyColor"
+            margin="normal"
+            name="skyColor"
+            type="text"
+            value={formik.values.skyColor}
+            variant="outlined"
+            error={formik.touched.skyColor && Boolean(formik.errors.skyColor)}
+            helperText={formik.touched.skyColor && formik.errors.skyColor}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
+            label="skyUrl"
+            margin="normal"
+            name="skyUrl"
+            type="text"
+            value={formik.values.skyUrl}
+            variant="outlined"
+            error={formik.touched.skyUrl && Boolean(formik.errors.skyUrl)}
+            helperText={formik.touched.skyUrl && formik.errors.skyUrl}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+
+          <Box sx={{ mt: 2 }}>
+            <Button
+              color="primary"
+              disabled={formik.isSubmitting}
+              size="large"
+              variant="contained"
+              type="submit"
+              onClick={() => setModalIsOpen(false)}
+            >
+              Create Environment
+            </Button>
+          </Box>
+        </form>
+      </Formik> */
+}
