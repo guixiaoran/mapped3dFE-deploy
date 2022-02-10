@@ -1,5 +1,6 @@
 import "aframe";
 import "aframe-environment-component";
+import "AframeComponent";
 import { useState, useEffect, useCallback } from "react";
 import { Scene } from "aframe-react";
 import { notify } from "components/index";
@@ -82,65 +83,100 @@ export const EnvironmentPreview = () => {
               )}
             </Scene>
           ))
-          : environment.map((data) => (
-            <Scene
-              key={data._id}
-              id="mainScene"
-              background="color:black"
-              className="menu"
-            >
-              {environment ? (
-                environment.map((data) => (
-                  <a-sky key={data._id} color={data.skyColor}></a-sky>
-                ))
-              ) : (
-                <a-sky></a-sky>
-              )}
+          : environment.map((data) =>
+            data.video
+              ? environment.map((data) => (
+                <Scene
+                  key={data._id}
+                  id="mainScene"
+                  background="color:black"
+                  className="menu"
+                >
+                  <a-videosphere
+                    rotation="0 -90 0" src="#video"
+                    play-on-click>
+                  </a-videosphere>
+                  <a-assets>
+                    {environment ? (
+                      environment.map((data, i) => (
+                        <video
+                          key={i}
+                          id="video"
+                          autoPlay
+                          loop
+                          crossOrigin="anonymous"
+                          playsInline
+                          webkit-playsinline="true"
+                          src={data.video}
+                        ></video>
+                      ))
+                    ) : (
+                      <a-asset-item></a-asset-item>
+                    )}
+                  </a-assets>
 
-              {environment ? (
-                environment.map((data) => (
-                  <a-plane
-                    key={data._id}
-                    id="plane"
-                    position="0 0 -4"
-                    rotation="-90 0 0"
-                    scale="100 100 100"
-                    width="100"
-                    height="100"
-                    color={data.floorColor}
-                  ></a-plane>
-                ))
-              ) : (
-                <a-plane></a-plane>
-              )}
-              <a-assets>
-                {objects ? (
-                  objects.map((data) => (
-                    <a-asset-item
-                      key={data._id}
-                      id={data.objectName}
-                      src={data.url}
-                    ></a-asset-item>
-                  ))
-                ) : (
-                  <a-asset-item></a-asset-item>
-                )}
-              </a-assets>
-              {objects ? (
-                objects.map((data) => (
-                  <a-gltf-model
-                    key={data._id}
-                    src={"#" + data.objectName}
-                    position={data.position}
-                    scale={data.scale}
-                    rotation={data.rotation}
-                  ></a-gltf-model>
-                ))
-              ) : (
-                <a-gltf-model></a-gltf-model>
-              )}
-            </Scene>
-          ))
+                </Scene>
+              ))
+              : environment.map((data) => (
+                <Scene
+                  key={data._id}
+                  id="mainScene"
+                  background="color:black"
+                  className="menu"
+                >
+                  {environment ? (
+                    environment.map((data) => (
+                      <a-sky key={data._id} color={data.skyColor}></a-sky>
+                    ))
+                  ) : (
+                    <a-sky></a-sky>
+                  )}
+
+                  {environment ? (
+                    environment.map((data) => (
+                      <a-plane
+                        key={data._id}
+                        id="plane"
+                        position="0 0 -4"
+                        rotation="-90 0 0"
+                        scale="100 100 100"
+                        width="100"
+                        height="100"
+                        color={data.floorColor}
+                      ></a-plane>
+                    ))
+                  ) : (
+                    <a-plane></a-plane>
+                  )}
+                  <a-assets>
+                    {objects ? (
+                      objects.map((data) => (
+                        <a-asset-item
+                          key={data._id}
+                          id={data.objectName}
+                          src={data.url}
+                        ></a-asset-item>
+                      ))
+                    ) : (
+                      <a-asset-item></a-asset-item>
+                    )}
+                  </a-assets>
+                  {objects ? (
+                    objects.map((data) => (
+                      <a-gltf-model
+                        key={data._id}
+                        src={"#" + data.objectName}
+                        position={data.position}
+                        scale={data.scale}
+                        rotation={data.rotation}
+                      ></a-gltf-model>
+                    ))
+                  ) : (
+                    <a-gltf-model></a-gltf-model>
+                  )}
+                </Scene>
+              ))
+          )
       )}
     </>
   );
