@@ -180,7 +180,7 @@ class API {
   }
   createLocalObject(data) {
     return axiosInstance
-      .post("object/createLocalObject", data, {
+      .post("object/createLocalObjectItem", data, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },

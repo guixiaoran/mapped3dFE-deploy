@@ -38,13 +38,16 @@ export const EnvironmentManager = () => {
   // updateObjectModal
   const [updateObjectModal, setUpdateObjectModal] = useState(false);
   const [currentObject, setCurrentObject] = useState("");
+  // const test =['panorama','preset','video','default'];
 
   // createLocalObject
   const createLocalObject = async (data) => {
     // console.log(data, "dt");
     try {
       const response = await API.createLocalObject(data);
+      console.log("createLocalObject data", data);
       if (response.success) {
+        getEnvironmentById(data.environmentId);
         formikObj.values.environmentId = "";
         formikObj.values.objectName = "";
         formikObj.values.position = "";
@@ -91,11 +94,12 @@ export const EnvironmentManager = () => {
     },
   });
   // delete local object
-  const deleteLocalObject = async (_id) => {
+  const deleteLocalObject = async (data) => {
     try {
-      const response = await API.deleteLocalObject(_id);
+      const response = await API.deleteLocalObject(data._id);
       if (response.success) {
-        // getLocalObjects();
+        console.log("env id:  ---", data);
+        getEnvironmentById(data.environmentId);
         notify("deleteLocalObject  successed");
       } else {
         notify("deleteLocalObject  Failed");
@@ -109,8 +113,9 @@ export const EnvironmentManager = () => {
   const updateLocalObject = async (_id, data) => {
     // console.log(data, "dt");
     try {
-      const response = await API.updateLocalObject(data);
+      const response = await API.updateLocalObject(_id, data);
       if (response.success) {
+        getEnvironmentById(data.environmentId);
         formikUpt.values.environmentId = "";
         formikUpt.values.objectName = "";
         formikUpt.values.position = "";
@@ -119,6 +124,7 @@ export const EnvironmentManager = () => {
         formikUpt.values.url = "";
         // setModalIsOpen(false);
         // getLocalObjects();
+
         notify("updateLocalObject successed");
       } else {
         notify("updateLocalObject  Failed");
@@ -134,12 +140,14 @@ export const EnvironmentManager = () => {
       position: "",
       scale: "",
       rotation: "",
+      url: "",
     },
     validationSchema: () => {
       return Yup.object().shape({
-        position: Yup.string().max(255).required("environmentName Is Required"),
-        scale: Yup.string().max(255).required("environmentCreator Is Required"),
-        rotation: Yup.string().max(255),
+        position: Yup.string().max(255).required("position Is Required"),
+        scale: Yup.string().max(255).required("scale Is Required"),
+        rotation: Yup.string().max(255).required("scale Is Required"),
+        url: Yup.string().max(255).required("scale Is Required"),
       });
     },
     onSubmit: async (values) => {
@@ -149,7 +157,7 @@ export const EnvironmentManager = () => {
         position: values.position,
         scale: values.scale,
         rotation: values.rotation,
-        url: selectedPublicObject.url,
+        url: values.url,
       };
       console.log(data);
       updateLocalObject(currentObject._id, data);
@@ -203,6 +211,19 @@ export const EnvironmentManager = () => {
             onBlur={formikUpt.handleBlur}
             onChange={formikUpt.handleChange}
           />
+          <TextField
+            fullWidth
+            label="rotation "
+            margin="normal"
+            name="rotation"
+            type="text"
+            value={formikUpt.values.url}
+            variant="outlined"
+            error={formikUpt.touched.url && Boolean(formikUpt.errors.url)}
+            helperText={formikUpt.touched.rotation && formikUpt.errors.url}
+            onBlur={formikUpt.handleBlur}
+            onChange={formikUpt.handleChange}
+          />
         </form>
       </Formik>
       <Button
@@ -215,10 +236,11 @@ export const EnvironmentManager = () => {
             position: formikUpt.values.position,
             scale: formikUpt.values.scale,
             rotation: formikUpt.values.rotation,
-            url: currentObject.url,
+            url: formikUpt.values.url,
           };
-          console.log(data);
+          console.log("data", data);
           updateLocalObject(currentObject._id, data);
+          console.log("currentObject._id", currentObject._id);
           // getLocalObjects();
           setUpdateObjectModal(false);
         }}
@@ -229,10 +251,7 @@ export const EnvironmentManager = () => {
   );
   //create environment
   const createEnvironment = async (data) => {
-    // let localObjectsId = data.localObjectsId.split(",");
-    // data.localObjectsId = localObjectsId;
     // console.log(data, "dt");
-
     try {
       const response = await API.createEnvironment(data);
       if (response.success) {
@@ -464,10 +483,10 @@ export const EnvironmentManager = () => {
     async (_id) => {
       try {
         const response = await API.getEnvironmentById(_id);
-        console.log("in this ID", _id);
+        // console.log("in this ID", _id);
         if (response.success) {
           setThisEnvDetail(response.data.localObjects);
-          console.log("in thisEnvDetail :", thisEnvDetail);
+          // console.log("in thisEnvDetail :", thisEnvDetail);
         } else {
           setEnvironments([]);
           notify("Failed to Fetch Env List");
@@ -521,6 +540,21 @@ export const EnvironmentManager = () => {
         <form noValidate onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
+            label="Local object Name"
+            margin="normal"
+            name="objectName"
+            type="text"
+            value={formik.values.objectName}
+            variant="outlined"
+            error={
+              formik.touched.objectName && Boolean(formik.errors.objectName)
+            }
+            helperText={formik.touched.objectName && formik.errors.objectName}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+          <TextField
+            fullWidth
             label="position"
             margin="normal"
             name="position"
@@ -566,7 +600,7 @@ export const EnvironmentManager = () => {
         onClick={() => {
           const data = {
             environmentId: currentEnv._id,
-            objectName: selectedPublicObject.objectName,
+            objectName: formik.values.objectName,
             position: formik.values.position,
             scale: formik.values.scale,
             rotation: formik.values.rotation,
@@ -650,7 +684,7 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
-                        Rotation:{data.Rotation}
+                        Rotation:{data.rotation}
                       </Typography>
                       <Typography
                         component="div"
@@ -669,7 +703,7 @@ export const EnvironmentManager = () => {
                       size="small"
                       onClick={() => {
                         setUpdateObjectModal(true);
-                        setCurrentObject(data._id);
+                        setCurrentObject(data);
                       }}
                     >
                       Update
@@ -677,7 +711,7 @@ export const EnvironmentManager = () => {
                     <Button
                       size="small"
                       onClick={() => {
-                        deleteLocalObject(data._id);
+                        deleteLocalObject(data);
                       }}
                     >
                       Delete
