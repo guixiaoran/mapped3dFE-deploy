@@ -7,116 +7,142 @@ import { useIsMountedRef } from "../../../helpers/hooks/index";
 import { API } from "helpers";
 
 export const EnvironmentPreview = () => {
-  const [environments, setEnvironments] = useState([]);
   const isMounted = useIsMountedRef();
-  const [objects, setObjects] = useState([]);
+  const [environment, setEnvironment] = useState([]);
+  const [objects, setObject] = useState([]);
 
-  const getEnvironments = useCallback(async () => {
-    try {
-      const response = await API.getEnvironments();
-      if (response.success) {
-        setEnvironments(response.data.data);
-        console.log(environments);
-      } else {
-        setEnvironments([]);
-        notify("Failed to Fetch Job List");
+  const getEnvironmentById = useCallback(
+    async (_id) => {
+      try {
+        const response = await API.getEnvironmentById(_id);
+        console.log("in this ID", _id);
+        if (response.success) {
+          setEnvironment(response.data.data);
+          setObject(response.data.localObjects);
+          console.log("in thisEnvDetail :", objects);
+          console.log("this is Environment", environment);
+        } else {
+          // setEnvironments([]);
+          notify("Failed to Fetch Env List");
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [isMounted]);
+    },
+    [isMounted]
+  );
 
   useEffect(() => {
-    getEnvironments();
-  }, [getEnvironments]);
+    getEnvironmentById("6204451d9bfe7f1ea9cd50e4");
+  }, [getEnvironmentById]);
 
-  //get local objects
-  const getLocalObjects = useCallback(async () => {
-    try {
-      const response = await API.getLocalObjects();
-      console.log("res----->", response.data.data);
-      if (response.success) setObjects(response.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [isMounted]);
-
-  useEffect(() => {
-    getLocalObjects();
-  }, [getLocalObjects]);
+  console.log(objects);
+  console.log(environment);
+  if (environment.map((data) => data.preset)) {
+    console.log("HEllo");
+  }
 
   let env = (
     <>
-      {environments ? (
-        environments.map((data) => (
-          
-          <Scene
-            key=""
-            id="mainScene"
-            background="color:black"
-            environment={"preset:" + data.preset}
-            className="menu"
-          >
-            {environments ? (
-              environments.map((data) => <a-sky key={data._id} color={data.skyColor}></a-sky>)
-            ) : (
-              <a-sky></a-sky>
-            )}
-
-            {environments ? (
-              environments.map((data) => (
-                <a-plane
-                  key={data._id}
-                  id="plane"
-                  position="0 0 -4"
-                  rotation="-90 0 0"
-                  scale="100 100 100"
-                  width="100"
-                  height="100"
-                  color={data.floorColor}
-                ></a-plane>
-              ))
-            ) : (
-              <a-plane></a-plane>
-            )}
-            <a-assets>
+      {environment.map((data) =>
+        data.preset
+          ? environment.map((data) => (
+            <Scene
+              key={data._id}
+              id="mainScene"
+              background="color:black"
+              environment={"preset:" + data.preset}
+              className="menu"
+            >
+              <a-assets>
+                {objects ? (
+                  objects.map((data) => (
+                    <a-asset-item
+                      key={data._id}
+                      id={data.objectName}
+                      src={data.url}
+                    ></a-asset-item>
+                  ))
+                ) : (
+                  <a-asset-item></a-asset-item>
+                )}
+              </a-assets>
               {objects ? (
                 objects.map((data) => (
-                  <a-asset-item
+                  <a-gltf-model
                     key={data._id}
-                    id={data.objectName}
-                    src={data.url}
-                  ></a-asset-item>
+                    src={"#" + data.objectName}
+                    position={data.position}
+                    scale={data.scale}
+                    rotation={data.rotation}
+                  ></a-gltf-model>
                 ))
               ) : (
-                <a-asset-item></a-asset-item>
+                <a-gltf-model></a-gltf-model>
               )}
-            </a-assets>
-            {objects ? (
-              objects.map((data) => (
-                <a-gltf-model
-                  key={data._id}
-                  src={"#" + data.objectName}
-                  position={data.position}
-                  scale={data.scale}
-                  rotation={data.rotation}
-                ></a-gltf-model>
-              ))
-            ) : (
-              <a-gltf-model></a-gltf-model>
-            )}
-          </Scene>
-        ))
-      ) : (
-        <Scene
-          id="mainScene"
-          background="color:black"
-          environment="preset:egypt"
-          className="menu"
-        ></Scene>
+            </Scene>
+          ))
+          : environment.map((data) => (
+            <Scene
+              key={data._id}
+              id="mainScene"
+              background="color:black"
+              className="menu"
+            >
+              {environment ? (
+                environment.map((data) => (
+                  <a-sky key={data._id} color={data.skyColor}></a-sky>
+                ))
+              ) : (
+                <a-sky></a-sky>
+              )}
+
+              {environment ? (
+                environment.map((data) => (
+                  <a-plane
+                    key={data._id}
+                    id="plane"
+                    position="0 0 -4"
+                    rotation="-90 0 0"
+                    scale="100 100 100"
+                    width="100"
+                    height="100"
+                    color={data.floorColor}
+                  ></a-plane>
+                ))
+              ) : (
+                <a-plane></a-plane>
+              )}
+              <a-assets>
+                {objects ? (
+                  objects.map((data) => (
+                    <a-asset-item
+                      key={data._id}
+                      id={data.objectName}
+                      src={data.url}
+                    ></a-asset-item>
+                  ))
+                ) : (
+                  <a-asset-item></a-asset-item>
+                )}
+              </a-assets>
+              {objects ? (
+                objects.map((data) => (
+                  <a-gltf-model
+                    key={data._id}
+                    src={"#" + data.objectName}
+                    position={data.position}
+                    scale={data.scale}
+                    rotation={data.rotation}
+                  ></a-gltf-model>
+                ))
+              ) : (
+                <a-gltf-model></a-gltf-model>
+              )}
+            </Scene>
+          ))
       )}
     </>
   );
   return <>{env}</>;
 };
-
