@@ -20,10 +20,9 @@ export const EnvironmentPreview = () => {
         if (response.success) {
           setEnvironment(response.data.data);
           setObject(response.data.localObjects);
-          console.log("in thisEnvDetail :", objects);
-          console.log("this is Environment", environment);
+          // console.log("in thisEnvDetail :", objects);
+          // console.log("this is Environment", environment);
         } else {
-          // setEnvironments([]);
           notify("Failed to Fetch Env List");
         }
       } catch (err) {
@@ -42,14 +41,10 @@ export const EnvironmentPreview = () => {
    * 
    */
   useEffect(() => {
-    getEnvironmentById("6204f8de06e56139b4cde13e");
+    getEnvironmentById("6204f53c06e56139b4cde0f9");
   }, [getEnvironmentById]);
 
-  console.log(objects);
-  console.log(environment);
-  if (environment.map((data) => data.preset)) {
-    console.log("HEllo");
-  }
+  
 
   let env = (
     <>
