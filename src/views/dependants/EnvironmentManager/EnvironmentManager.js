@@ -12,6 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Link,
 } from "@mui/material";
 import { API } from "helpers";
 import { LayoutConfig } from "constants/index";
@@ -123,7 +124,19 @@ export const EnvironmentManager = () => {
       setModalIsOpen(false);
     }
   };
-
+  const deleteEnvironment = async (data) => {
+    try {
+      const response = await API.deleteEnvironment(data._id);
+      if (response.success) {
+        getEnvironments();
+        // notify("deletedeleteEnvironment  successed");
+      } else {
+        notify("deleteLocalObject  Failed");
+      }
+    } catch (err) {
+      setModalIsOpen(false);
+    }
+  };
   // update local object
   const updateLocalObject = async (_id, data) => {
     // console.log(data, "dt");
@@ -152,10 +165,10 @@ export const EnvironmentManager = () => {
     initialValues: {
       environmentId: "",
       objectName: "",
-      position: "",
-      scale: "",
-      rotation: "",
-      url: "",
+      position: currentObject.position,
+      scale: currentObject.scale,
+      rotation: currentObject.rotation,
+      url: currentObject.url,
     },
     validationSchema: () => {
       return Yup.object().shape({
@@ -185,7 +198,7 @@ export const EnvironmentManager = () => {
         <form noValidate onSubmit={formikUpt.handleSubmit}>
           <TextField
             fullWidth
-            label="position"
+            label="position" //formikUpt.values.scale
             margin="normal"
             name="position"
             type="text"
@@ -228,14 +241,14 @@ export const EnvironmentManager = () => {
           />
           <TextField
             fullWidth
-            label="rotation "
+            label="url "
             margin="normal"
-            name="rotation"
+            name="url"
             type="text"
             value={formikUpt.values.url}
             variant="outlined"
             error={formikUpt.touched.url && Boolean(formikUpt.errors.url)}
-            helperText={formikUpt.touched.rotation && formikUpt.errors.url}
+            helperText={formikUpt.touched.url && formikUpt.errors.url}
             onBlur={formikUpt.handleBlur}
             onChange={formikUpt.handleChange}
           />
@@ -725,7 +738,7 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
-                        S3 Link: {data.url}
+                        <Link href={data.url}>Download this model </Link>
                       </Typography>
                     </div>
                   </CardContent>
@@ -733,8 +746,13 @@ export const EnvironmentManager = () => {
                     <Button
                       size="small"
                       onClick={() => {
-                        setUpdateObjectModal(true);
+                        formikUpt.values.position = data.position;
+                        formikUpt.values.scale = data.scale;
+                        formikUpt.values.rotation = data.rotation;
+                        formikUpt.values.url = data.url;
                         setCurrentObject(data);
+                        setUpdateObjectModal(true);
+                        // setCurrentObject(data);
                       }}
                     >
                       Update
@@ -831,6 +849,14 @@ export const EnvironmentManager = () => {
                     }}
                   >
                     Manage Objects
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      deleteEnvironment(data);
+                    }}
+                  >
+                    Delete
                   </Button>
                 </CardActions>
               </Card>{" "}

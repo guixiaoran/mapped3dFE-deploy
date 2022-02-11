@@ -132,6 +132,16 @@ class API {
       })
       .catch((error) => errorHelper(error));
   }
+  deleteEnvironment(_id) {
+    return axiosInstance
+      .delete(`environment/deleteEnvironment/${_id}`, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then(() => generateSuccess(AccessToken))
+      .catch((error) => errorHelper(error));
+  }
   getEnvironmentById(_id) {
     return axiosInstance
       .get(`environment/getEnvironmentById/${_id}`, {
@@ -196,6 +206,16 @@ class API {
         },
       })
       .then(() => generateSuccess(AccessToken))
+      .catch((error) => errorHelper(error));
+  }
+  uploadDocument(data) {
+    return axiosInstance
+      .post("upload/uploadDocument", data, {
+        headers: {
+          "Content-Type": "multipart/form-data; boundary='boundary'",
+        },
+      })
+      .then((response) => generateSuccess(response.data.data))
       .catch((error) => errorHelper(error));
   }
   uploadPublicObject(data) {

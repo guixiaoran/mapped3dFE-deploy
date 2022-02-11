@@ -123,21 +123,33 @@ export const ObjectManager = () => {
     // HANDLING FILE AS SENDING FILE INTO BACKEND
     if (!isFilePicked) return;
     const formData = new FormData();
-    console.log(selectedFile, "file");
     formData.append("documentFile", selectedFile);
-    console.log("11from11", formData);
-    await fetch("http://localhost:8000/api/upload/uploadDocument", {
-      method: "POST",
-      body: formData,
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setS3url(data.data.documentFileUrl.original);
-        // console.log("s3------>", s3url);
-      });
-
+    //await fetch("http://localhost:8000/api/upload/uploadDocument", {
+    const response = await API.uploadDocument(formData);
+    if (response.success) {
+      console.log("response.data--->", response.data.documentFileUrl.original);
+      setS3url(response.data.documentFileUrl.original); //documentFileUrl.original
+    }
     uploadDataset(formData);
   }, [isFilePicked, selectedFile]);
+
+  useEffect(() => {
+    handleSubmission();
+  }, [handleSubmission]);
+
+  // setS3url(response.data.data.documentFileUrl.original);
+  //   await fetch(API.uploadDocument, {
+  //     method: "POST",
+  //     body: formData,
+  //   })
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       setS3url(data.data.documentFileUrl.original);
+  //       // console.log("s3------>", s3url);
+  //     });
+
+  //   uploadDataset(formData);
+  // }, [isFilePicked, selectedFile]);
 
   useEffect(() => {
     handleSubmission();
