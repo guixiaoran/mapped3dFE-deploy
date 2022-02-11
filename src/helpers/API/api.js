@@ -132,6 +132,28 @@ class API {
       })
       .catch((error) => errorHelper(error));
   }
+  deleteEnvironment(_id) {
+    return axiosInstance
+      .delete(`environment/deleteEnvironment/${_id}`, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then(() => generateSuccess(AccessToken))
+      .catch((error) => errorHelper(error));
+  }
+  getEnvironmentById(_id) {
+    return axiosInstance
+      .get(`environment/getEnvironmentById/${_id}`, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then((response) => {
+        return generateSuccess(response.data.data);
+      })
+      .catch((error) => errorHelper(error));
+  }
   createEnvironment(data) {
     return axiosInstance
       .post("environment/createEnvironment", data, {
@@ -168,7 +190,7 @@ class API {
   }
   createLocalObject(data) {
     return axiosInstance
-      .post("object/createLocalObject", data, {
+      .post("object/createLocalObjectItem", data, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
@@ -186,6 +208,16 @@ class API {
       .then(() => generateSuccess(AccessToken))
       .catch((error) => errorHelper(error));
   }
+  uploadDocument(data) {
+    return axiosInstance
+      .post("upload/uploadDocument", data, {
+        headers: {
+          "Content-Type": "multipart/form-data; boundary='boundary'",
+        },
+      })
+      .then((response) => generateSuccess(response.data.data))
+      .catch((error) => errorHelper(error));
+  }
   uploadPublicObject(data) {
     return axiosInstance
       .post("object/uploadPublicObject", data, {
@@ -198,7 +230,7 @@ class API {
   }
   deleteLocalObject(_id) {
     return axiosInstance
-      .delete(`object/deleteLocalObject/${_id}`, {
+      .delete(`object/deleteLocalObjectItem/${_id}`, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
@@ -208,7 +240,7 @@ class API {
   }
   updateLocalObject(_id, data) {
     return axiosInstance
-      .put(`object/updateLocalObject/${_id}`, data, {
+      .put(`object/updateLocalObjectItem/${_id}`, data, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
