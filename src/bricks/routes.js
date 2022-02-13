@@ -189,7 +189,7 @@ export const AppRoutes = (props) => {
       />
       <Route
         exact
-        path="/preview"
+        path="/preview/:id"
         element={
           <AuthRoute
             redirectTo="/login"

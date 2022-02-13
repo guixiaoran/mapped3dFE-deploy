@@ -851,6 +851,10 @@ export const EnvironmentManager = () => {
                     Manage Objects
                   </Button>
                   <Button
+                  >
+                    <Link href={`/preview/`+data._id}>Preview</Link>
+                  </Button>
+                  <Button
                     size="small"
                     onClick={() => {
                       deleteEnvironment(data);
