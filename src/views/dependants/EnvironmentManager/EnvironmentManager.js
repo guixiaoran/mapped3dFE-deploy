@@ -47,15 +47,31 @@ export const EnvironmentManager = () => {
     "Default",
   ];
   const presetOptions = [
-    "Env1-ocean",
-    "Env2-forest",
-    "Env3-room",
-    "Env4-road",
-    "Env5-Egypt",
+    "none",
+    "default",
+    "contact",
+    "egypt",
+    "checkerboard",
+    "forest",
+    "goaland",
+    "yavapai",
+    "goldmine",
+    "threetowers",
+    "poison",
+    "arches",
+    "tron",
+    "japan",
+    "dream",
+    "volcano",
+    "starry",
+    "osiris",
+    "moon",
   ];
+
   const [envType, setEnvType] = useState("");
   const [choosenPreset, setChoosenPreset] = useState("");
-
+  const [choosenSkyUrl, setChoosenSkyUrl] = useState("");
+  const [choosen360Video, setChoosen360Video] = useState("");
   // createLocalObject
   const createLocalObject = async (data) => {
     // console.log(data, "dt");
@@ -361,6 +377,16 @@ export const EnvironmentManager = () => {
     formik.values.preset = event.target.value;
     console.log("event.target.value:", event.target.value);
   };
+  const handleSkyUrlChange = (event) => {
+    console.log("event.target.value", event.target.value);
+    setChoosenSkyUrl(event.target.value);
+    formik.values.skyUrl = event.target.value;
+  };
+  const handleVideoChange = (event) => {
+    console.log("event.target.value", event.target.value);
+    setChoosen360Video(event.target.value);
+    formik.values.video = event.target.value;
+  };
 
   let createEnvorionmentModal = (
     <Box>
@@ -414,35 +440,35 @@ export const EnvironmentManager = () => {
           })}
         </Select>
         {envType === EnvironmentType[0] ? (
-          <TextField
-            fullWidth
-            label="video "
-            margin="normal"
-            name="video"
-            type="text"
-            value={formik.values.video}
-            variant="outlined"
-            error={formik.touched.video && Boolean(formik.errors.video)}
-            helperText={formik.touched.video && formik.errors.video}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
+          <Select
+            value={choosen360Video}
+            label="360 Video"
+            onChange={handleVideoChange}
+          >
+            {PublicObjects.map((data, i) => {
+              return (
+                <MenuItem value={data.url} key={i}>
+                  {data.objectName}
+                </MenuItem>
+              );
+            })}
+          </Select>
         ) : envType === EnvironmentType[1] ? (
           <Box>
             {" "}
-            <TextField
-              fullWidth
-              label="skyUrl"
-              margin="normal"
-              name="skyUrl"
-              type="text"
-              value={formik.values.skyUrl}
-              variant="outlined"
-              error={formik.touched.skyUrl && Boolean(formik.errors.skyUrl)}
-              helperText={formik.touched.skyUrl && formik.errors.skyUrl}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
+            <Select
+              value={choosenSkyUrl}
+              label="Sky Url"
+              onChange={handleSkyUrlChange}
+            >
+              {PublicObjects.map((data, i) => {
+                return (
+                  <MenuItem value={data.url} key={i}>
+                    {data.objectName}
+                  </MenuItem>
+                );
+              })}
+            </Select>
           </Box>
         ) : envType === EnvironmentType[2] ? (
           <Select
@@ -850,9 +876,8 @@ export const EnvironmentManager = () => {
                   >
                     Manage Objects
                   </Button>
-                  <Button
-                  >
-                    <Link href={`/preview/`+data._id}>Preview</Link>
+                  <Button size="small" href={`/preview/` + data._id}>
+                    Preview
                   </Button>
                   <Button
                     size="small"

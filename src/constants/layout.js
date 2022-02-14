@@ -69,7 +69,7 @@ class Layout {
           name: "Environment Preview",
           type: "button",
           icon: "bytesize:user",
-          helpingAttribute: "/preview",
+          helpingAttribute: "/preview/:id",
           customTitle: "Environment Preview",
           isFavourite: true,
         }),

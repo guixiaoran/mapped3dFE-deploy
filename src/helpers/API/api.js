@@ -64,7 +64,7 @@ class API {
   async logoutUser() {
     return axiosInstance
       .put(
-        "logout",
+        "user/logout",
         {},
         {
           headers: {
@@ -103,7 +103,7 @@ class API {
    */
   async register(data) {
     return axiosInstance
-      .post(`register`, data)
+      .post(`user/register`, data)
       .then((response) => generateSuccess(response.data.data))
       .catch((error) => errorHelper(error));
   }
@@ -135,6 +135,16 @@ class API {
   deleteEnvironment(_id) {
     return axiosInstance
       .delete(`environment/deleteEnvironment/${_id}`, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then(() => generateSuccess(AccessToken))
+      .catch((error) => errorHelper(error));
+  }
+  deletePublicObject(_id) {
+    return axiosInstance
+      .delete(`object/deletePublicObject/${_id}`, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
