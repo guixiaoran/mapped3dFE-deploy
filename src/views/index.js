@@ -7,19 +7,18 @@ import { FourOFour } from "./common/FourOFour/FourOFour";
 import { Register } from "./common/Register/Register";
 import { Home } from "./dependants/Home/Home";
 import { MobileMenu } from "./dependants/mobileMenu/mobileMenu";
-import { Example } from "./dependants/Example/Example";
-import { UsersManager } from "./dependants/UsersManager/UsersManager";
+
 import { EnvironmentManager } from "./dependants/EnvironmentManager/EnvironmentManager";
 import { ObjectManager } from "./dependants/ObjectManager/ObjectManager";
+import { EnvironmentPreview } from "./dependants/EnvironmentPreview/EnvironmentPreview";
 export {
-  Example,
   Login,
   Register,
   Home,
   MobileMenu,
   FourOFour,
   AuthCallback,
-  UsersManager,
   EnvironmentManager,
   ObjectManager,
+  EnvironmentPreview,
 };

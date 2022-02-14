@@ -9,16 +9,16 @@ import { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   AuthCallback,
-  Example,
   FourOFour,
   Home,
   Login,
   MobileMenu,
   Register,
-  UsersManager,
   EnvironmentManager,
   ObjectManager,
+  EnvironmentPreview,
 } from "views";
+
 import { Layout } from "./layout";
 
 const AuthRoute = ({ children, redirectTo, parentProps, loginStatus }) => {
@@ -140,38 +140,6 @@ export const AppRoutes = (props) => {
         }
       />
       <Route
-        exact
-        path="/examples"
-        element={
-          <AuthRoute
-            redirectTo="/login"
-            loginStatus={loginStatus}
-            parentProps={props}
-          >
-            <Layout>
-              {" "}
-              <Example {...props} />
-            </Layout>
-          </AuthRoute>
-        }
-      />
-      <Route
-        exact
-        path="/users"
-        element={
-          <AuthRoute
-            redirectTo="/login"
-            loginStatus={loginStatus}
-            parentProps={props}
-          >
-            <Layout>
-              {" "}
-              <UsersManager {...props} />
-            </Layout>
-          </AuthRoute>
-        }
-      />
-      <Route
         element={
           <AuthRoute
             redirectTo="/login"
@@ -181,6 +149,22 @@ export const AppRoutes = (props) => {
             <Layout>
               {" "}
               <FourOFour {...props} />
+            </Layout>
+          </AuthRoute>
+        }
+      />
+      <Route
+        exact
+        path="/preview/:id"
+        element={
+          <AuthRoute
+            redirectTo="/login"
+            loginStatus={loginStatus}
+            parentProps={props}
+          >
+            <Layout>
+              {" "}
+              <EnvironmentPreview {...props} />
             </Layout>
           </AuthRoute>
         }

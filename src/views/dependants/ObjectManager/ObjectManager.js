@@ -4,9 +4,10 @@ import {
   Typography,
   TextField,
   Button,
-  // CardContent,
-  // Card,
-  // Grid,
+  CardContent,
+  Card,
+  Grid,
+  CardActions,
 } from "@mui/material";
 import { LayoutConfig } from "constants/index";
 import { useState, useCallback, useEffect } from "react";
@@ -55,6 +56,18 @@ export const ObjectManager = () => {
     getPublicObjects();
   }, [getPublicObjects]);
   //uploadDataset
+  const deletePublicObject = async (data) => {
+    try {
+      const response = await API.deletePublicObject(data._id);
+      if (response.success) {
+        getPublicObjects();
+      } else {
+        notify("delete Object  Failed");
+      }
+    } catch (err) {
+      creatObjectModal(false);
+    }
+  };
   const createPublicObject = async (data) => {
     try {
       const response = await API.createPublicObject(data);
@@ -63,7 +76,7 @@ export const ObjectManager = () => {
         formik.values.url = s3url;
         formik.values.objectName = "";
         setCreatObjectModal(false);
-        // getDatasets();
+        setS3url("");
         getPublicObjects();
       } else {
         notify("data entry Creation Failed!!");
@@ -137,20 +150,60 @@ export const ObjectManager = () => {
     handleSubmission();
   }, [handleSubmission]);
 
-  // setS3url(response.data.data.documentFileUrl.original);
-  //   await fetch(API.uploadDocument, {
-  //     method: "POST",
-  //     body: formData,
-  //   })
-  //     .then((resp) => resp.json())
-  //     .then((data) => {
-  //       setS3url(data.data.documentFileUrl.original);
-  //       // console.log("s3------>", s3url);
-  //     });
-
-  //   uploadDataset(formData);
-  // }, [isFilePicked, selectedFile]);
-
+  let displayObjects = (
+    <Grid Container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      {PublicObjects.length > 0 ? (
+        PublicObjects.map((data) => {
+          return (
+            <Box key={data._id} mb={4}>
+              <Card width={50}>
+                <CardContent>
+                  <div style={{ width: 300, whiteSpace: "nowrap" }}>
+                    <Typography
+                      component="div"
+                      sx={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                      }}
+                      gutterBottom
+                    >
+                      {data.objectName}
+                      {/* {data._id} */}
+                    </Typography>
+                    <Typography
+                      component="div"
+                      sx={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                      }}
+                      gutterBottom
+                    >
+                      {data.url}
+                    </Typography>
+                  </div>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" href={`/preview/` + data._id}>
+                    Preview
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      deletePublicObject(data);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </CardActions>
+              </Card>{" "}
+            </Box>
+          );
+        })
+      ) : (
+        <Typography>No Data Available</Typography>
+      )}
+    </Grid>
+  );
   useEffect(() => {
     handleSubmission();
   }, [selectedFile]);
@@ -258,21 +311,7 @@ export const ObjectManager = () => {
             ],
           }}
         />
-        {/* <EnhancedTable
-          data={objects}
-          title="Local Objects Manager"
-          options={{
-            ignoreKeys: [
-              "_id",
-              "deakinSSO",
-              "firstLogin",
-              "emailVerified",
-              "isBlocked",
-              "__v",
-              "createdAt",
-            ],
-          }}
-        /> */}
+        {displayObjects}
       </Container>
     </Box>
   );
