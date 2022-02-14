@@ -34,22 +34,6 @@ class Layout {
           isFavourite: true,
         }),
         new MenuItem({
-          name: "Example",
-          type: "button",
-          icon: "bytesize:code",
-          helpingAttribute: "/examples",
-          customTitle: "Example Code File",
-          isFavourite: true,
-        }),
-        new MenuItem({
-          name: "Users Manager",
-          type: "button",
-          icon: "bytesize:user",
-          helpingAttribute: "/users",
-          customTitle: "Users Manager",
-          isFavourite: true,
-        }),
-        new MenuItem({
           name: "Object Manager",
           type: "button",
           icon: "bytesize:user",

@@ -108,18 +108,18 @@ class API {
       .catch((error) => errorHelper(error));
   }
 
-  getUsers() {
-    return axiosInstance
-      .get("admin/getUser", {
-        headers: {
-          authorization: "Bearer " + AccessToken,
-        },
-      })
-      .then((response) => {
-        return generateSuccess(response.data.data);
-      })
-      .catch((error) => errorHelper(error));
-  }
+  // getUsers() {
+  //   return axiosInstance
+  //     .get("admin/getUser", {
+  //       headers: {
+  //         authorization: "Bearer " + AccessToken,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       return generateSuccess(response.data.data);
+  //     })
+  //     .catch((error) => errorHelper(error));
+  // }
   getEnvironments() {
     return axiosInstance
       .get("environment/getEnvironments", {
