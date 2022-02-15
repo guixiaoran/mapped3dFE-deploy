@@ -17,7 +17,7 @@ import {
 import { API } from "helpers";
 import { LayoutConfig } from "constants/index";
 import { useState, useCallback, useEffect } from "react";
-import { notify, EnhancedTable, EnhancedModal } from "components/index";
+import { notify, EnhancedModal } from "components/index";
 import { useIsMountedRef } from "../../../helpers/hooks/index";
 import { useFormik, Formik } from "formik";
 import * as Yup from "yup";
@@ -860,7 +860,8 @@ export const EnvironmentManager = () => {
                       }}
                       gutterBottom
                     >
-                      Video:{data.video}
+                      {/* Video:{data.video} */}
+                      <Link href={data.video}>Download video </Link>
                     </Typography>
                   </div>
                 </CardContent>
@@ -951,7 +952,7 @@ export const EnvironmentManager = () => {
           Create Environment
         </Button>
         {environmentsCard}
-        <EnhancedTable
+        {/* <EnhancedTable
           data={environments}
           title="environments Manager"
           options={{
@@ -966,7 +967,7 @@ export const EnvironmentManager = () => {
               "_id",
             ],
           }}
-        />
+        /> */}
       </Container>
     </Box>
   );
