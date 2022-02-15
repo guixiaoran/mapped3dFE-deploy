@@ -11,11 +11,11 @@ ENV PATH /app/node_modules/.bin:$PATH
 # install and cache app dependencies
 COPY . .
 
-RUN npm install --silent
+RUN yarn install --production --silent
 RUN npm install -g serve
 
 # Create Build
-RUN npm run build
+RUN yarn run build
 
 # Specify port
 EXPOSE 3000
