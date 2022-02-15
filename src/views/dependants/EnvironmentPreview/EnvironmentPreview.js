@@ -84,6 +84,7 @@ export const EnvironmentPreview = () => {
               ) : (
                 <a-gltf-model></a-gltf-model>
               )}
+              <a-camera position="0 1.6 0"></a-camera>
             </Scene>
           ))
           : environment.map((data) =>
@@ -117,7 +118,32 @@ export const EnvironmentPreview = () => {
                     ) : (
                       <a-asset-item></a-asset-item>
                     )}
+                    {objects ? (
+                      objects.map((data) => (
+                        <a-asset-item
+                          key={data._id}
+                          id={data.objectName}
+                          src={data.url}
+                        ></a-asset-item>
+                      ))
+                    ) : (
+                      <a-asset-item></a-asset-item>
+                    )}
                   </a-assets>
+                  {objects ? (
+                    objects.map((data) => (
+                      <a-gltf-model
+                        key={data._id}
+                        src={"#" + data.objectName}
+                        position={data.position}
+                        scale={data.scale}
+                        rotation={data.rotation}
+                      ></a-gltf-model>
+                    ))
+                  ) : (
+                    <a-gltf-model></a-gltf-model>
+                  )}
+                  <a-camera position="0 1.6 0"></a-camera>
                 </Scene>
               ))
               : environment.map((data) =>
@@ -142,7 +168,33 @@ export const EnvironmentPreview = () => {
                         <a-sky></a-sky>
                       )}
 
-                      <a-assets></a-assets>
+                      <a-assets>
+                        {objects ? (
+                          objects.map((data) => (
+                            <a-asset-item
+                              key={data._id}
+                              id={data.objectName}
+                              src={data.url}
+                            ></a-asset-item>
+                          ))
+                        ) : (
+                          <a-asset-item></a-asset-item>
+                        )}
+                      </a-assets>
+                      {objects ? (
+                        objects.map((data) => (
+                          <a-gltf-model
+                            key={data._id}
+                            src={"#" + data.objectName}
+                            position={data.position}
+                            scale={data.scale}
+                            rotation={data.rotation}
+                          ></a-gltf-model>
+                        ))
+                      ) : (
+                        <a-gltf-model></a-gltf-model>
+                      )}
+                      <a-camera position="0 1.6 0"></a-camera>
                     </Scene>
                   ))
                   : environment.map((data) => (
@@ -205,6 +257,7 @@ export const EnvironmentPreview = () => {
                       ) : (
                         <a-gltf-model></a-gltf-model>
                       )}
+                      <a-camera position="0 1.6 0"></a-camera>
                     </Scene>
                   ))
               )
