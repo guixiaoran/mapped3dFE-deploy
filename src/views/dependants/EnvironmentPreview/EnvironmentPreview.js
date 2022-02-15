@@ -84,6 +84,7 @@ export const EnvironmentPreview = () => {
               ) : (
                 <a-gltf-model></a-gltf-model>
               )}
+              <a-camera position="0 1.6 0"></a-camera>
             </Scene>
           ))
           : environment.map((data) =>
@@ -142,6 +143,7 @@ export const EnvironmentPreview = () => {
                   ) : (
                     <a-gltf-model></a-gltf-model>
                   )}
+                  <a-camera position="0 1.6 0"></a-camera>
                 </Scene>
               ))
               : environment.map((data) =>
@@ -192,6 +194,7 @@ export const EnvironmentPreview = () => {
                       ) : (
                         <a-gltf-model></a-gltf-model>
                       )}
+                      <a-camera position="0 1.6 0"></a-camera>
                     </Scene>
                   ))
                   : environment.map((data) => (
@@ -254,6 +257,7 @@ export const EnvironmentPreview = () => {
                       ) : (
                         <a-gltf-model></a-gltf-model>
                       )}
+                      <a-camera position="0 1.6 0"></a-camera>
                     </Scene>
                   ))
               )
