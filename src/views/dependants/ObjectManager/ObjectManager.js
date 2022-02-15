@@ -8,11 +8,12 @@ import {
   Card,
   Grid,
   CardActions,
+  Link,
 } from "@mui/material";
 import { LayoutConfig } from "constants/index";
 import { useState, useCallback, useEffect } from "react";
 import { useIsMountedRef } from "../../../helpers/hooks/index";
-import { notify, EnhancedTable, EnhancedModal } from "components/index";
+import { notify, EnhancedModal } from "components/index";
 import { API } from "helpers";
 import { useFormik, Formik } from "formik";
 import * as Yup from "yup";
@@ -178,14 +179,12 @@ export const ObjectManager = () => {
                       }}
                       gutterBottom
                     >
-                      {data.url}
+                      {/* {data.url} */}
+                      <Link href={data.url}>Download model </Link>
                     </Typography>
                   </div>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" href={`/preview/` + data._id}>
-                    Preview
-                  </Button>
                   <Button
                     size="small"
                     onClick={() => {
@@ -296,7 +295,7 @@ export const ObjectManager = () => {
         >
           Upload Data
         </Button>
-        <EnhancedTable
+        {/* <EnhancedTable
           data={PublicObjects}
           title="Public Objects Manager"
           options={{
@@ -310,7 +309,7 @@ export const ObjectManager = () => {
               "createdAt",
             ],
           }}
-        />
+        /> */}
         {displayObjects}
       </Container>
     </Box>
