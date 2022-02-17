@@ -108,18 +108,6 @@ class API {
       .catch((error) => errorHelper(error));
   }
 
-  // getUsers() {
-  //   return axiosInstance
-  //     .get("admin/getUser", {
-  //       headers: {
-  //         authorization: "Bearer " + AccessToken,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       return generateSuccess(response.data.data);
-  //     })
-  //     .catch((error) => errorHelper(error));
-  // }
   getEnvironments() {
     return axiosInstance
       .get("environment/getEnvironments", {
@@ -251,6 +239,16 @@ class API {
   updateLocalObject(_id, data) {
     return axiosInstance
       .put(`object/updateLocalObjectItem/${_id}`, data, {
+        headers: {
+          authorization: "Bearer " + AccessToken,
+        },
+      })
+      .then(() => generateSuccess(AccessToken))
+      .catch((error) => errorHelper(error));
+  }
+  updateEnvironment(_id, data) {
+    return axiosInstance
+      .put(`environment/updateEnvironment/${_id}`, data, {
         headers: {
           authorization: "Bearer " + AccessToken,
         },
