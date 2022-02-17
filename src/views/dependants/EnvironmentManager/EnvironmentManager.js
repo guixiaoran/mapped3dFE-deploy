@@ -43,7 +43,7 @@ export const EnvironmentManager = () => {
   const [videoObjects, setvideoObjects] = useState([]);
   const [normalObjects, setNormalObjects] = useState([]);
   // update color modal
-  // const [updateColorModal, setUpdateColorModal] = useState(false);
+  const [updateColorModal, setUpdateColorModal] = useState(false);
   // choose Environment Type when create a new environment
   const EnvironmentType = [
     "Panorama(360 video)",
@@ -286,7 +286,7 @@ export const EnvironmentManager = () => {
           };
           console.log("data", data);
           updateLocalObject(currentObject._id, data);
-          console.log("currentObject._id", currentObject._id);
+          // console.log("currentObject._id", currentObject._id);
           setUpdateObjectModal(false);
         }}
       >
@@ -295,132 +295,131 @@ export const EnvironmentManager = () => {
     </Container>
   );
   // update environment
-  // const updateEnvironment = async (_id, data) => {
-  //   // console.log(data, "dt");
-  //   try {
-  //     const response = await API.updateEnvironment(_id, data);
-  //     if (response.success) {
-  //       getEnvironmentById(data.environmentId);
-  //       formikUptEnv.values.environmentName = "";
-  //       formikUptEnv.values.panorama = "";
-  //       formikUptEnv.values.preset = "";
-  //       formikUptEnv.values.video = "";
-  //       formikUptEnv.values.floorColor = "green";
-  //       formikUptEnv.values.skyColor = "blue";
-  //       formikUptEnv.values.skyUrl = "";
-  //       notify("updateEnvironment successed");
-  //     } else {
-  //       notify("updateEnvironment  Failed");
-  //     }
-  //   } catch (err) {
-  //     setModalIsOpen(false);
-  //   }
-  // };
-  // let formikUptEnv = useFormik({
-  //   initialValues: {
-  //     environmentName: "",
-  //     panorama: "false",
-  //     preset: "",
-  //     video: "",
-  //     floorColor: "green",
-  //     skyColor: "blue",
-  //     skyUrl: "",
-  //   },
-  //   validationSchema: () => {
-  //     return Yup.object().shape({
-  //       environmentName: Yup.string()
-  //         .max(255)
-  //         .required("environmentName Is Required"),
+  const updateEnvironment = async (_id, data) => {
+    // console.log(data, "dt");
+    try {
+      const response = await API.updateEnvironment(_id, data);
+      if (response.success) {
+        getEnvironments();
+        formikUptEnv.values.environmentName = "";
+        formikUptEnv.values.panorama = "";
+        formikUptEnv.values.preset = "";
+        formikUptEnv.values.video = "";
+        formikUptEnv.values.floorColor = currentEnv.floorColor;
+        formikUptEnv.values.skyColor = currentEnv.skyColor;
+        formikUptEnv.values.skyUrl = "";
+        notify("updateEnvironment successed");
+      } else {
+        notify("updateEnvironment  Failed");
+      }
+    } catch (err) {
+      setModalIsOpen(false);
+    }
+  };
+  let formikUptEnv = useFormik({
+    initialValues: {
+      environmentName: "",
+      panorama: "false",
+      preset: "",
+      video: "",
+      floorColor: currentEnv.floorColor,
+      skyColor: currentEnv.skyColor,
+      skyUrl: "",
+    },
+    validationSchema: () => {
+      return Yup.object().shape({
+        environmentName: Yup.string()
+          .max(255)
+          .required("environmentName Is Required"),
 
-  //       panorama: Yup.string().max(255),
-  //       preset: Yup.string().max(255),
-  //       video: Yup.string().max(255),
-  //       floorColor: Yup.string().max(255),
-  //       skyColor: Yup.string().max(255),
-  //       skyUrl: Yup.string().max(255),
-  //       // localObjectsId: Yup.string().max(255),
-  //     });
-  //   },
-  //   onSubmit: async (values) => {
-  //     const data = {
-  //       environmentName: values.environmentName,
-  //       panorama: values.panorama,
-  //       preset: values.preset,
-  //       video: values.video,
-  //       floorColor: values.floorColor,
-  //       skyColor: values.skyColor,
-  //       skyUrl: values.skyUrl,
-  //     };
-  //     console.log(data);
-  //     updateEnvironment(currentObject._id, data);
-  //   },
-  // });
+        panorama: Yup.string().max(255),
+        preset: Yup.string().max(255),
+        video: Yup.string().max(255),
+        floorColor: Yup.string().max(255),
+        skyColor: Yup.string().max(255),
+        skyUrl: Yup.string().max(255),
+      });
+    },
+    onSubmit: async (values) => {
+      // const data = {
+      //   environmentName: values.environmentName,
+      //   panorama: values.panorama.toString(),
+      //   preset: values.preset,
+      //   video: values.video,
+      //   floorColor: values.floorColor,
+      //   skyColor: values.skyColor,
+      //   skyUrl: values.skyUrl,
+      // };
+      console.log(values);
+      // updateEnvironment(currentEnv._id, data);
+    },
+  });
 
-  // let updateEnvironmentForm = (
-  //   <Container>
-  //     <Formik initialValues={formikUptEnv.initialValues}>
-  //       <form noValidate onSubmit={formikUptEnv.handleSubmit}>
-  //         <TextField
-  //           fullWidth
-  //           label="skyColor"
-  //           margin="normal"
-  //           name="skyColor"
-  //           type="text"
-  //           value={formikUptEnv.values.formikUptEnv}
-  //           variant="outlined"
-  //           error={
-  //             formikUptEnv.touched.skyColor &&
-  //             Boolean(formikUptEnv.errors.skyColor)
-  //           }
-  //           helperText={
-  //             formikUptEnv.touched.skyColor && formikUptEnv.errors.skyColor
-  //           }
-  //           onBlur={formikUptEnv.handleBlur}
-  //           onChange={formikUptEnv.handleChange}
-  //         />{" "}
-  //         <TextField
-  //           fullWidth
-  //           label="floorColor"
-  //           margin="normal"
-  //           name="floorColor"
-  //           type="text"
-  //           value={formikUptEnv.values.floorColor}
-  //           variant="outlined"
-  //           error={
-  //             formikUptEnv.touched.floorColor &&
-  //             Boolean(formikUptEnv.errors.floorColor)
-  //           }
-  //           helperText={
-  //             formikUptEnv.touched.floorColor && formikUptEnv.errors.floorColor
-  //           }
-  //           onBlur={formikUptEnv.handleBlur}
-  //           onChange={formikUptEnv.handleChange}
-  //         />
-  //       </form>
-  //     </Formik>
-  //     <Button
-  //       size="median"
-  //       variant="contained"
-  //       onClick={() => {
-  //         const data = {
-  //           environmentId: currentEnv._id,
-  //           environmentName: currentEnv.environmentName,
-  //           panorama: currentEnv.panorama,
-  //           video: currentEnv.video,
-  //           skyUrl: currentEnv.skyUrl,
-  //           floorColor: formikUptEnv.values.floorColor,
-  //           skyColor: formikUptEnv.values.skyColor,
-  //         };
-  //         console.log("data", data);
-  //         updateEnvironment(currentEnv._id, data);
-  //         console.log("currentEnv._id", currentEnv._id);
-  //         setUpdateColorModal(false);
-  //       }}
-  //     >
-  //       update environment color
-  //     </Button>
-  //   </Container>
-  // );
+  let updateEnvironmentForm = (
+    <Container>
+      <Formik initialValues={formikUptEnv.initialValues}>
+        <form noValidate onSubmit={formikUptEnv.handleSubmit}>
+          <TextField
+            fullWidth
+            label="skyColor"
+            margin="normal"
+            name="skyColor"
+            type="text"
+            value={formikUptEnv.values.skyColor}
+            variant="outlined"
+            error={
+              formikUptEnv.touched.skyColor &&
+              Boolean(formikUptEnv.errors.skyColor)
+            }
+            helperText={
+              formikUptEnv.touched.skyColor && formikUptEnv.errors.skyColor
+            }
+            onBlur={formikUptEnv.handleBlur}
+            onChange={formikUptEnv.handleChange}
+          />{" "}
+          <TextField
+            fullWidth
+            label="floorColor"
+            margin="normal"
+            name="floorColor"
+            type="text"
+            value={formikUptEnv.values.floorColor}
+            variant="outlined"
+            error={
+              formikUptEnv.touched.floorColor &&
+              Boolean(formikUptEnv.errors.floorColor)
+            }
+            helperText={
+              formikUptEnv.touched.floorColor && formikUptEnv.errors.floorColor
+            }
+            onBlur={formikUptEnv.handleBlur}
+            onChange={formikUptEnv.handleChange}
+          />
+        </form>
+      </Formik>
+      <Button
+        size="median"
+        variant="contained"
+        onClick={() => {
+          const data = {
+            // environmentId: currentEnv._id,
+            environmentName: currentEnv.environmentName,
+            panorama: currentEnv.panorama.toString(),
+            preset: currentEnv.preset,
+            video: currentEnv.video,
+            skyUrl: currentEnv.skyUrl,
+            floorColor: formikUptEnv.values.floorColor,
+            skyColor: formikUptEnv.values.skyColor,
+          };
+          updateEnvironment(currentEnv._id, data);
+          console.log("currentEnv data", data);
+          setUpdateColorModal(false);
+        }}
+      >
+        update environment color
+      </Button>
+    </Container>
+  );
 
   //create environment
   const createEnvironment = async (data) => {
@@ -680,10 +679,8 @@ export const EnvironmentManager = () => {
     async (_id) => {
       try {
         const response = await API.getEnvironmentById(_id);
-        // console.log("in this ID", _id);
         if (response.success) {
           setThisEnvDetail(response.data.localObjects);
-          // console.log("in thisEnvDetail :", thisEnvDetail);
         } else {
           setEnvironments([]);
           notify("Failed to Fetch Env List");
@@ -938,7 +935,7 @@ export const EnvironmentManager = () => {
       {environments.length > 0 ? (
         environments.map((data) => {
           return (
-            <Grid item xs={4} key={data._id}>
+            <Grid item xs={6} key={data._id}>
               <Box mb={4}>
                 <Card width={50}>
                   <CardContent>
@@ -1030,17 +1027,20 @@ export const EnvironmentManager = () => {
                     >
                       Delete
                     </Button>
-                    {/* <Button
-                      size="small"
-                      onClick={() => {
-                        formikUptEnv.values.floorColor = data.floorColor;
-                        formikUptEnv.values.skyColor = data.skyColor;
-                        setCurrentEnv(data);
-                        setUpdateColorModal(true);
-                      }}
-                    >
-                      Update Color
-                    </Button> */}
+                    {data.panorama.toString() === "false" &&
+                    data.preset.length === 0 && data.video.length===0? (
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            formikUptEnv.values.floorColor = data.floorColor;
+                            formikUptEnv.values.skyColor = data.skyColor;
+                            setCurrentEnv(data);
+                            setUpdateColorModal(true);
+                          }}
+                        >
+                        Update Color
+                        </Button>
+                      ) : null}
                   </CardActions>
                 </Card>{" "}
               </Box>
@@ -1084,7 +1084,7 @@ export const EnvironmentManager = () => {
           disableSubmit: true,
         }}
       />
-      {/* <EnhancedModal
+      <EnhancedModal
         isOpen={updateColorModal}
         dialogTitle={currentEnv.environmentName}
         dialogContent={updateEnvironmentForm}
@@ -1092,7 +1092,7 @@ export const EnvironmentManager = () => {
           onClose: () => setUpdateColorModal(false),
           disableSubmit: true,
         }}
-      /> */}
+      />
       <Button
         sx={{ my: 2 }}
         variant="contained"
