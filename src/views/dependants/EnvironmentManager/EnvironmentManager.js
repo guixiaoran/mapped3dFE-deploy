@@ -88,8 +88,17 @@ export const EnvironmentManager = () => {
         formikObj.values.environmentId = "";
         formikObj.values.objectName = "";
         formikObj.values.position = "";
+        formikObj.values.positionx = "";
+        formikObj.values.positiony = "";
+        formikObj.values.positionz = "";
         formikObj.values.scale = "";
+        formikObj.values.scalex = "";
+        formikObj.values.scaley = "";
+        formikObj.values.scalez = "";
         formikObj.values.rotation = "";
+        formikObj.values.rotationx = "";
+        formikObj.values.rotationy = "";
+        formikObj.values.rotationz = "";
         formikObj.values.url = "";
         setModalIsOpen(false);
         getEnvironments();
@@ -106,24 +115,39 @@ export const EnvironmentManager = () => {
       environmentId: currentEnv._id,
       objectName: selectedPublicObject.objectName,
       position: "",
+      positionx: "",
+      positiony: "",
+      positionz: "",
       scale: "",
+      scalex: "",
+      scaley: "",
+      scalez: "",
       rotation: "",
+      rotationx: "",
+      rotationy: "",
+      rotationz: "",
       url: selectedPublicObject.url,
     },
     validationSchema: () => {
       return Yup.object().shape({
-        position: Yup.string().max(255).required("position Is Required"),
-        scale: Yup.string().max(255).required("scale Is Required"),
-        rotation: Yup.string().max(255).required("rotation Is Required"),
+        positionx: Yup.string().max(255).required("position Is Required"),
+        positiony: Yup.string().max(255).required("position Is Required"),
+        positionz: Yup.string().max(255).required("position Is Required"),
+        scalex: Yup.string().max(255).required("scale Is Required"),
+        scaley: Yup.string().max(255).required("scale Is Required"),
+        scalez: Yup.string().max(255).required("scale Is Required"),
+        rotationx: Yup.string().max(255).required("rotation Is Required"),
+        rotationy: Yup.string().max(255).required("rotation Is Required"),
+        rotationz: Yup.string().max(255).required("rotation Is Required"),
       });
     },
     onSubmit: async (values) => {
       const data = {
         environmentId: currentEnv._id,
         objectName: selectedPublicObject.objectName,
-        position: values.position,
-        scale: values.scale,
-        rotation: values.rotation,
+        position: [values.positionx,values.positiony,values.positionz].join(' '),
+        scale: [values.scalex,values.scaley,values.scalez].join(' '),
+        rotation: [values.rotationx,values.rotationy,values.rotationz].join(' '),
         url: selectedPublicObject.url,
       };
       console.log(data);
@@ -168,8 +192,17 @@ export const EnvironmentManager = () => {
         formikUpt.values.environmentId = "";
         formikUpt.values.objectName = "";
         formikUpt.values.position = "";
+        formikUpt.values.positionx = "";
+        formikUpt.values.positiony = "";
+        formikUpt.values.positionz = "";
         formikUpt.values.scale = "";
+        formikUpt.values.scalex = "";
+        formikUpt.values.scaley = "";
+        formikUpt.values.scalez = "";
         formikUpt.values.rotation = "";
+        formikUpt.values.rotationx = "";
+        formikUpt.values.rotationy = "";
+        formikUpt.values.rotationz = "";
         formikUpt.values.url = "";
         notify("updateLocalObject successed");
       } else {
@@ -183,16 +216,31 @@ export const EnvironmentManager = () => {
     initialValues: {
       environmentId: "",
       objectName: "",
-      position: currentObject.position,
-      scale: currentObject.scale,
-      rotation: currentObject.rotation,
-      url: currentObject.url,
+      position:"",
+      positionx: '',
+      positiony: '',
+      positionz: '',
+      scale: "",
+      scalex: "",
+      scaley: "",
+      scalez: "",
+      rotation: "",
+      rotationx: "",
+      rotationy: "",
+      rotationz: "",
+      url: '',
     },
     validationSchema: () => {
       return Yup.object().shape({
-        position: Yup.string().max(255).required("position Is Required"),
-        scale: Yup.string().max(255).required("scale Is Required"),
-        rotation: Yup.string().max(255).required("scale Is Required"),
+        positionx: Yup.string().max(255).required("position Is Required"),
+        positiony: Yup.string().max(255).required("position Is Required"),
+        positionz: Yup.string().max(255).required("position Is Required"),
+        scalex: Yup.string().max(255).required("scale Is Required"),
+        scaley: Yup.string().max(255).required("scale Is Required"),
+        scalez: Yup.string().max(255).required("scale Is Required"),
+        rotationx: Yup.string().max(255).required("rotation Is Required"),
+        rotationy: Yup.string().max(255).required("rotation Is Required"),
+        rotationz: Yup.string().max(255).required("rotation Is Required"),
         url: Yup.string().max(255).required("scale Is Required"),
       });
     },
@@ -200,9 +248,9 @@ export const EnvironmentManager = () => {
       const data = {
         environmentId: currentEnv._id,
         objectName: selectedPublicObject.objectName,
-        position: values.position,
-        scale: values.scale,
-        rotation: values.rotation,
+        position: [values.positionx,values.positiony,values.positionz].join(' '),
+        scale: [values.scalex,values.scaley,values.scalez].join(' '),
+        rotation: [values.rotationx,values.rotationy,values.rotationz].join(' '),
         url: values.url,
       };
       console.log(data);
@@ -214,49 +262,169 @@ export const EnvironmentManager = () => {
     <Container>
       <Formik initialValues={formikUpt.initialValues}>
         <form noValidate onSubmit={formikUpt.handleSubmit}>
-          <TextField
-            fullWidth
-            label="position" //formikUpt.values.scale
-            margin="normal"
-            name="position"
-            type="text"
-            value={formikUpt.values.position}
-            variant="outlined"
-            error={
-              formikUpt.touched.position && Boolean(formikUpt.errors.position)
-            }
-            helperText={formikUpt.touched.position && formikUpt.errors.position}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="scale"
-            margin="normal"
-            name="scale"
-            type="text"
-            value={formikUpt.values.scale}
-            variant="outlined"
-            error={formikUpt.touched.scale && Boolean(formikUpt.errors.scale)}
-            helperText={formikUpt.touched.scale && formikUpt.errors.scale}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="rotation "
-            margin="normal"
-            name="rotation"
-            type="text"
-            value={formikUpt.values.rotation}
-            variant="outlined"
-            error={
-              formikUpt.touched.rotation && Boolean(formikUpt.errors.rotation)
-            }
-            helperText={formikUpt.touched.rotation && formikUpt.errors.rotation}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position X"
+                margin="normal"
+                name="positionx"
+                type="text"
+                value={formikUpt.values.positionx}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positionx &&
+                  Boolean(formikUpt.errors.positionx)
+                }
+                helperText={
+                  formikUpt.touched.positionx && formikUpt.errors.positionx
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Y"
+                margin="normal"
+                name="positiony"
+                type="text"
+                value={formikUpt.values.positiony}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positiony &&
+                  Boolean(formikUpt.errors.positiony)
+                }
+                helperText={
+                  formikUpt.touched.positiony && formikUpt.errors.positiony
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Z"
+                margin="normal"
+                name="positionz"
+                type="text"
+                value={formikUpt.values.positionz}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positionz &&
+                  Boolean(formikUpt.errors.positionz)
+                }
+                helperText={
+                  formikUpt.touched.positionz && formikUpt.errors.positionz
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale X"
+                margin="normal"
+                name="scalex"
+                type="text"
+                value={formikUpt.values.scalex}
+                variant="outlined"
+                error={formikUpt.touched.scalex && Boolean(formikUpt.errors.scalex)}
+                helperText={formikUpt.touched.scalex && formikUpt.errors.scalex}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Y"
+                margin="normal"
+                name="scaley"
+                type="text"
+                value={formikUpt.values.scaley}
+                variant="outlined"
+                error={formikUpt.touched.scaley && Boolean(formikUpt.errors.scaley)}
+                helperText={formikUpt.touched.scaley && formikUpt.errors.scaley}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scaleZ"
+                margin="normal"
+                name="scalez"
+                type="text"
+                value={formikUpt.values.scalez}
+                variant="outlined"
+                error={formikUpt.touched.scalez && Boolean(formikUpt.errors.scalez)}
+                helperText={formikUpt.touched.scalez && formikUpt.errors.scalez}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation X"
+                margin="normal"
+                name="rotationx"
+                type="text"
+                value={formikUpt.values.rotationx}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationx && Boolean(formikUpt.errors.rotationx)
+                }
+                helperText={formikUpt.touched.rotationx && formikUpt.errors.rotationx}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Y"
+                margin="normal"
+                name="rotationy"
+                type="text"
+                value={formikUpt.values.rotationy}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationy && Boolean(formikUpt.errors.rotationy)
+                }
+                helperText={formikUpt.touched.rotationy && formikUpt.errors.rotationy}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Z"
+                margin="normal"
+                name="rotationz"
+                type="text"
+                value={formikUpt.values.rotationz}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationz && Boolean(formikUpt.errors.rotationz)
+                }
+                helperText={formikUpt.touched.rotationz && formikUpt.errors.rotationz}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+
           <TextField
             fullWidth
             label="url "
@@ -279,9 +447,9 @@ export const EnvironmentManager = () => {
           const data = {
             environmentId: currentEnv._id,
             objectName: currentObject.objectName,
-            position: formikUpt.values.position,
-            scale: formikUpt.values.scale,
-            rotation: formikUpt.values.rotation,
+            position: [formikUpt.values.positionx,formikUpt.values.positiony,formikUpt.values.positionz].join(' '),
+            scale: [formikUpt.values.scalex,formikUpt.values.scaley,formikUpt.values.scalez].join(' '),
+            rotation: [formikUpt.values.rotationx,formikUpt.values.rotationy,formikUpt.values.rotationz].join(' '),
             url: formikUpt.values.url,
           };
           console.log("data", data);
@@ -748,49 +916,169 @@ export const EnvironmentManager = () => {
             onBlur={formikObj.handleBlur}
             onChange={formikObj.handleChange}
           />
-          <TextField
-            fullWidth
-            label="position"
-            margin="normal"
-            name="position"
-            type="text"
-            value={formikObj.values.position}
-            variant="outlined"
-            error={
-              formikObj.touched.position && Boolean(formikObj.errors.position)
-            }
-            helperText={formikObj.touched.position && formikObj.errors.position}
-            onBlur={formikObj.handleBlur}
-            onChange={formikObj.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="scale"
-            margin="normal"
-            name="scale"
-            type="text"
-            value={formikObj.values.scale}
-            variant="outlined"
-            error={formikObj.touched.scale && Boolean(formikObj.errors.scale)}
-            helperText={formikObj.touched.scale && formikObj.errors.scale}
-            onBlur={formikObj.handleBlur}
-            onChange={formikObj.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="rotation "
-            margin="normal"
-            name="rotation"
-            type="text"
-            value={formikObj.values.rotation}
-            variant="outlined"
-            error={
-              formikObj.touched.rotation && Boolean(formikObj.errors.rotation)
-            }
-            helperText={formikObj.touched.rotation && formikObj.errors.rotation}
-            onBlur={formikObj.handleBlur}
-            onChange={formikObj.handleChange}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position X"
+                margin="normal"
+                name="positionx"
+                type="text"
+                value={formikObj.values.positionx}
+                variant="outlined"
+                error={
+                  formikObj.touched.positionx &&
+                  Boolean(formikObj.errors.positionx)
+                }
+                helperText={
+                  formikObj.touched.positionx && formikObj.errors.positionx
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Y"
+                margin="normal"
+                name="positiony"
+                type="text"
+                value={formikObj.values.positiony}
+                variant="outlined"
+                error={
+                  formikObj.touched.positiony &&
+                  Boolean(formikObj.errors.positiony)
+                }
+                helperText={
+                  formikObj.touched.positiony && formikObj.errors.positiony
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Z"
+                margin="normal"
+                name="positionz"
+                type="text"
+                value={formikObj.values.positionz}
+                variant="outlined"
+                error={
+                  formikObj.touched.positionz &&
+                  Boolean(formikObj.errors.positionz)
+                }
+                helperText={
+                  formikObj.touched.positionz && formikObj.errors.positionz
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale X"
+                margin="normal"
+                name="scalex"
+                type="text"
+                value={formikObj.values.scalex}
+                variant="outlined"
+                error={formikObj.touched.scalex && Boolean(formikObj.errors.scalex)}
+                helperText={formikObj.touched.scalex && formikObj.errors.scalex}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Y"
+                margin="normal"
+                name="scaley"
+                type="text"
+                value={formikObj.values.scaley}
+                variant="outlined"
+                error={formikObj.touched.scaley && Boolean(formikObj.errors.scaley)}
+                helperText={formikObj.touched.scaley && formikObj.errors.scaley}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Z"
+                margin="normal"
+                name="scalez"
+                type="text"
+                value={formikObj.values.scalez}
+                variant="outlined"
+                error={formikObj.touched.scalez && Boolean(formikObj.errors.scalez)}
+                helperText={formikObj.touched.scalez && formikObj.errors.scalez}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation X"
+                margin="normal"
+                name="rotationx"
+                type="text"
+                value={formikObj.values.rotationx}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationx && Boolean(formikObj.errors.rotationx)
+                }
+                helperText={formikObj.touched.rotationx && formikObj.errors.rotationx}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Y"
+                margin="normal"
+                name="rotationy"
+                type="text"
+                value={formikObj.values.rotationy}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationy && Boolean(formikObj.errors.rotationy)
+                }
+                helperText={formikObj.touched.rotationy && formikObj.errors.rotationy}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Z"
+                margin="normal"
+                name="rotationz"
+                type="text"
+                value={formikObj.values.rotationz}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationz && Boolean(formikObj.errors.rotationz)
+                }
+                helperText={formikObj.touched.rotationz && formikObj.errors.rotationz}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
         </form>
       </Formik>
       <Button
@@ -800,9 +1088,9 @@ export const EnvironmentManager = () => {
           const data = {
             environmentId: currentEnv._id,
             objectName: formikObj.values.objectName,
-            position: formikObj.values.position,
-            scale: formikObj.values.scale,
-            rotation: formikObj.values.rotation,
+            position: [formikObj.values.positionx,formikObj.values.positiony,formikObj.values.positionz].join(' '),
+            scale: [formikObj.values.scalex,formikObj.values.scaley,formikObj.values.scalez].join(' '),
+            rotation: [formikObj.values.rotationx,formikObj.values.rotationy,formikObj.values.rotationz].join(' '),
             url: selectedPublicObject.url,
           };
           console.log(data);
@@ -861,6 +1149,16 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
+                        _________________
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
                         Position: {data.position}
                       </Typography>
                       <Typography
@@ -891,6 +1189,16 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
+                        _________________
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
                         <Link href={data.url}>Download this model </Link>
                       </Typography>
                     </div>
@@ -899,9 +1207,18 @@ export const EnvironmentManager = () => {
                     <Button
                       size="small"
                       onClick={() => {
-                        formikUpt.values.position = data.position;
-                        formikUpt.values.scale = data.scale;
-                        formikUpt.values.rotation = data.rotation;
+                        const positions = data.position.split(" ");
+                        const scales = data.scale.split(" ");
+                        const rotations = data.rotation.split(" ");
+                        formikUpt.values.positionx = positions[0];
+                        formikUpt.values.positiony = positions[1];
+                        formikUpt.values.positionz = positions[2];
+                        formikUpt.values.scalex = scales[0];
+                        formikUpt.values.scaley = scales[1];
+                        formikUpt.values.scalez = scales[2];
+                        formikUpt.values.rotationx = rotations[0];
+                        formikUpt.values.rotationy = rotations[1];
+                        formikUpt.values.rotationz = rotations[2];
                         formikUpt.values.url = data.url;
                         setCurrentObject(data);
                         setUpdateObjectModal(true);
@@ -1028,7 +1345,8 @@ export const EnvironmentManager = () => {
                       Delete
                     </Button>
                     {data.panorama.toString() === "false" &&
-                    data.preset.length === 0 && data.video.length===0? (
+                    data.preset.length === 0 &&
+                    data.video.length === 0 ? (
                         <Button
                           size="small"
                           onClick={() => {
