@@ -3,6 +3,7 @@ import { useMediaQuery } from '@mui/material';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Header, BottomNavToolbar } from 'components';
 import { LayoutContext } from 'contexts';
+import PropTypes from 'prop-types';
 
 const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 const useStyles = makeStyles(theme => createStyles({
@@ -46,7 +47,6 @@ export const Layout = (props) => {
 
   let isItDesktop = useMediaQuery('(min-width:600px) and (min-height:600px)');
   let content = (
-
     <div className={classes.root}>
       {headerRenderStatus() && <Header />}
       <main className={isItDesktop ? classes.content : classes.mobileContent}>
@@ -60,4 +60,5 @@ export const Layout = (props) => {
   );
   return content;
 };
+Layout.propTypes={children:PropTypes.string,};
 

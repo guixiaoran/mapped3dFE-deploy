@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 /**
 * 17/09/2019 : Options for actionsButtons are moved inside options
@@ -89,4 +90,23 @@ export const EnhancedModal = (props) => {
     </Dialog>
   );
   return content;
+};
+
+EnhancedModal.propTypes = {
+  dialogTitle: PropTypes.string,
+  isOpen: PropTypes.func,
+  dialogContent: PropTypes.string,
+  submitButtonName: PropTypes.string,
+  cancelButtonName: PropTypes.string,
+  onClose: PropTypes.func,
+  onSubmit: PropTypes.func,
+  options: PropTypes.shape({
+    submitButtonName: PropTypes.string,
+    closeButtonName: PropTypes.string,
+    disableSubmit: PropTypes.bool,
+    disableClose: PropTypes.bool,
+    swapButtonColors: PropTypes.bool,
+    onClose: PropTypes.func,
+    onSubmit: PropTypes.func,
+  })
 };

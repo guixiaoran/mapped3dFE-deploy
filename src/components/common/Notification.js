@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { Snackbar } from '@mui/material';
+import PropTypes from 'prop-types';
 
 let OpenNotificationFunction;
 
@@ -84,6 +85,11 @@ export const notify = (message, callback, variant) => {
     OpenNotificationFunction(message);
   if (typeof callback === 'function')
     callback();
+};
+
+EnhancedNotification.propTypes = {
+  horizontal: PropTypes.string,
+  vertical: PropTypes.string,
 };
 
 
