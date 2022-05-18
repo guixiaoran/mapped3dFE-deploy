@@ -42,11 +42,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "predeploy":"npm run winBuild",
-    "deploy":"gh-pages -d build",
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "winBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -81,6 +78,5 @@
     "easter-egg-collection": "^1.4.56",
     "eslint-plugin-react": "^7.27.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "gh-pages": "^4.0.0"
   }
 }
