@@ -15,7 +15,7 @@ import {
   Link,
 } from "@mui/material";
 import { API } from "helpers";
-import { LayoutConfig } from "constants/index";
+
 import { useState, useCallback, useEffect } from "react";
 import { notify, EnhancedModal } from "components/index";
 import { useIsMountedRef } from "../../../helpers/hooks/index";
@@ -39,6 +39,11 @@ export const EnvironmentManager = () => {
   // updateObjectModal
   const [updateObjectModal, setUpdateObjectModal] = useState(false);
   const [currentObject, setCurrentObject] = useState("");
+  const [imageObjects, setImageObjects] = useState([]);
+  const [videoObjects, setvideoObjects] = useState([]);
+  const [normalObjects, setNormalObjects] = useState([]);
+  // update color modal
+  const [updateColorModal, setUpdateColorModal] = useState(false);
   // choose Environment Type when create a new environment
   const EnvironmentType = [
     "Panorama(360 video)",
@@ -83,8 +88,17 @@ export const EnvironmentManager = () => {
         formikObj.values.environmentId = "";
         formikObj.values.objectName = "";
         formikObj.values.position = "";
+        formikObj.values.positionx = "";
+        formikObj.values.positiony = "";
+        formikObj.values.positionz = "";
         formikObj.values.scale = "";
+        formikObj.values.scalex = "";
+        formikObj.values.scaley = "";
+        formikObj.values.scalez = "";
         formikObj.values.rotation = "";
+        formikObj.values.rotationx = "";
+        formikObj.values.rotationy = "";
+        formikObj.values.rotationz = "";
         formikObj.values.url = "";
         setModalIsOpen(false);
         getEnvironments();
@@ -101,24 +115,39 @@ export const EnvironmentManager = () => {
       environmentId: currentEnv._id,
       objectName: selectedPublicObject.objectName,
       position: "",
+      positionx: "",
+      positiony: "",
+      positionz: "",
       scale: "",
+      scalex: "",
+      scaley: "",
+      scalez: "",
       rotation: "",
+      rotationx: "",
+      rotationy: "",
+      rotationz: "",
       url: selectedPublicObject.url,
     },
     validationSchema: () => {
       return Yup.object().shape({
-        position: Yup.string().max(255).required("position Is Required"),
-        scale: Yup.string().max(255).required("scale Is Required"),
-        rotation: Yup.string().max(255).required("rotation Is Required"),
+        positionx: Yup.string().max(255).required("position Is Required"),
+        positiony: Yup.string().max(255).required("position Is Required"),
+        positionz: Yup.string().max(255).required("position Is Required"),
+        scalex: Yup.string().max(255).required("scale Is Required"),
+        scaley: Yup.string().max(255).required("scale Is Required"),
+        scalez: Yup.string().max(255).required("scale Is Required"),
+        rotationx: Yup.string().max(255).required("rotation Is Required"),
+        rotationy: Yup.string().max(255).required("rotation Is Required"),
+        rotationz: Yup.string().max(255).required("rotation Is Required"),
       });
     },
     onSubmit: async (values) => {
       const data = {
         environmentId: currentEnv._id,
         objectName: selectedPublicObject.objectName,
-        position: values.position,
-        scale: values.scale,
-        rotation: values.rotation,
+        position: [values.positionx,values.positiony,values.positionz].join(' '),
+        scale: [values.scalex,values.scaley,values.scalez].join(' '),
+        rotation: [values.rotationx,values.rotationy,values.rotationz].join(' '),
         url: selectedPublicObject.url,
       };
       console.log(data);
@@ -163,12 +192,18 @@ export const EnvironmentManager = () => {
         formikUpt.values.environmentId = "";
         formikUpt.values.objectName = "";
         formikUpt.values.position = "";
+        formikUpt.values.positionx = "";
+        formikUpt.values.positiony = "";
+        formikUpt.values.positionz = "";
         formikUpt.values.scale = "";
+        formikUpt.values.scalex = "";
+        formikUpt.values.scaley = "";
+        formikUpt.values.scalez = "";
         formikUpt.values.rotation = "";
+        formikUpt.values.rotationx = "";
+        formikUpt.values.rotationy = "";
+        formikUpt.values.rotationz = "";
         formikUpt.values.url = "";
-        // setModalIsOpen(false);
-        // getLocalObjects();
-
         notify("updateLocalObject successed");
       } else {
         notify("updateLocalObject  Failed");
@@ -181,16 +216,31 @@ export const EnvironmentManager = () => {
     initialValues: {
       environmentId: "",
       objectName: "",
-      position: currentObject.position,
-      scale: currentObject.scale,
-      rotation: currentObject.rotation,
-      url: currentObject.url,
+      position:"",
+      positionx: '',
+      positiony: '',
+      positionz: '',
+      scale: "",
+      scalex: "",
+      scaley: "",
+      scalez: "",
+      rotation: "",
+      rotationx: "",
+      rotationy: "",
+      rotationz: "",
+      url: '',
     },
     validationSchema: () => {
       return Yup.object().shape({
-        position: Yup.string().max(255).required("position Is Required"),
-        scale: Yup.string().max(255).required("scale Is Required"),
-        rotation: Yup.string().max(255).required("scale Is Required"),
+        positionx: Yup.string().max(255).required("position Is Required"),
+        positiony: Yup.string().max(255).required("position Is Required"),
+        positionz: Yup.string().max(255).required("position Is Required"),
+        scalex: Yup.string().max(255).required("scale Is Required"),
+        scaley: Yup.string().max(255).required("scale Is Required"),
+        scalez: Yup.string().max(255).required("scale Is Required"),
+        rotationx: Yup.string().max(255).required("rotation Is Required"),
+        rotationy: Yup.string().max(255).required("rotation Is Required"),
+        rotationz: Yup.string().max(255).required("rotation Is Required"),
         url: Yup.string().max(255).required("scale Is Required"),
       });
     },
@@ -198,9 +248,9 @@ export const EnvironmentManager = () => {
       const data = {
         environmentId: currentEnv._id,
         objectName: selectedPublicObject.objectName,
-        position: values.position,
-        scale: values.scale,
-        rotation: values.rotation,
+        position: [values.positionx,values.positiony,values.positionz].join(' '),
+        scale: [values.scalex,values.scaley,values.scalez].join(' '),
+        rotation: [values.rotationx,values.rotationy,values.rotationz].join(' '),
         url: values.url,
       };
       console.log(data);
@@ -212,49 +262,169 @@ export const EnvironmentManager = () => {
     <Container>
       <Formik initialValues={formikUpt.initialValues}>
         <form noValidate onSubmit={formikUpt.handleSubmit}>
-          <TextField
-            fullWidth
-            label="position" //formikUpt.values.scale
-            margin="normal"
-            name="position"
-            type="text"
-            value={formikUpt.values.position}
-            variant="outlined"
-            error={
-              formikUpt.touched.position && Boolean(formikUpt.errors.position)
-            }
-            helperText={formikUpt.touched.position && formikUpt.errors.position}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="scale"
-            margin="normal"
-            name="scale"
-            type="text"
-            value={formikUpt.values.scale}
-            variant="outlined"
-            error={formikUpt.touched.scale && Boolean(formikUpt.errors.scale)}
-            helperText={formikUpt.touched.scale && formikUpt.errors.scale}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="rotation "
-            margin="normal"
-            name="rotation"
-            type="text"
-            value={formikUpt.values.rotation}
-            variant="outlined"
-            error={
-              formikUpt.touched.rotation && Boolean(formikUpt.errors.rotation)
-            }
-            helperText={formikUpt.touched.rotation && formikUpt.errors.rotation}
-            onBlur={formikUpt.handleBlur}
-            onChange={formikUpt.handleChange}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position X"
+                margin="normal"
+                name="positionx"
+                type="text"
+                value={formikUpt.values.positionx}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positionx &&
+                  Boolean(formikUpt.errors.positionx)
+                }
+                helperText={
+                  formikUpt.touched.positionx && formikUpt.errors.positionx
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Y"
+                margin="normal"
+                name="positiony"
+                type="text"
+                value={formikUpt.values.positiony}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positiony &&
+                  Boolean(formikUpt.errors.positiony)
+                }
+                helperText={
+                  formikUpt.touched.positiony && formikUpt.errors.positiony
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Z"
+                margin="normal"
+                name="positionz"
+                type="text"
+                value={formikUpt.values.positionz}
+                variant="outlined"
+                error={
+                  formikUpt.touched.positionz &&
+                  Boolean(formikUpt.errors.positionz)
+                }
+                helperText={
+                  formikUpt.touched.positionz && formikUpt.errors.positionz
+                }
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale X"
+                margin="normal"
+                name="scalex"
+                type="text"
+                value={formikUpt.values.scalex}
+                variant="outlined"
+                error={formikUpt.touched.scalex && Boolean(formikUpt.errors.scalex)}
+                helperText={formikUpt.touched.scalex && formikUpt.errors.scalex}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Y"
+                margin="normal"
+                name="scaley"
+                type="text"
+                value={formikUpt.values.scaley}
+                variant="outlined"
+                error={formikUpt.touched.scaley && Boolean(formikUpt.errors.scaley)}
+                helperText={formikUpt.touched.scaley && formikUpt.errors.scaley}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scaleZ"
+                margin="normal"
+                name="scalez"
+                type="text"
+                value={formikUpt.values.scalez}
+                variant="outlined"
+                error={formikUpt.touched.scalez && Boolean(formikUpt.errors.scalez)}
+                helperText={formikUpt.touched.scalez && formikUpt.errors.scalez}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation X"
+                margin="normal"
+                name="rotationx"
+                type="text"
+                value={formikUpt.values.rotationx}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationx && Boolean(formikUpt.errors.rotationx)
+                }
+                helperText={formikUpt.touched.rotationx && formikUpt.errors.rotationx}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Y"
+                margin="normal"
+                name="rotationy"
+                type="text"
+                value={formikUpt.values.rotationy}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationy && Boolean(formikUpt.errors.rotationy)
+                }
+                helperText={formikUpt.touched.rotationy && formikUpt.errors.rotationy}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Z"
+                margin="normal"
+                name="rotationz"
+                type="text"
+                value={formikUpt.values.rotationz}
+                variant="outlined"
+                error={
+                  formikUpt.touched.rotationz && Boolean(formikUpt.errors.rotationz)
+                }
+                helperText={formikUpt.touched.rotationz && formikUpt.errors.rotationz}
+                onBlur={formikUpt.handleBlur}
+                onChange={formikUpt.handleChange}
+              />
+            </Grid>
+          </Grid>
+
           <TextField
             fullWidth
             label="url "
@@ -277,15 +447,14 @@ export const EnvironmentManager = () => {
           const data = {
             environmentId: currentEnv._id,
             objectName: currentObject.objectName,
-            position: formikUpt.values.position,
-            scale: formikUpt.values.scale,
-            rotation: formikUpt.values.rotation,
+            position: [formikUpt.values.positionx,formikUpt.values.positiony,formikUpt.values.positionz].join(' '),
+            scale: [formikUpt.values.scalex,formikUpt.values.scaley,formikUpt.values.scalez].join(' '),
+            rotation: [formikUpt.values.rotationx,formikUpt.values.rotationy,formikUpt.values.rotationz].join(' '),
             url: formikUpt.values.url,
           };
           console.log("data", data);
           updateLocalObject(currentObject._id, data);
-          console.log("currentObject._id", currentObject._id);
-          // getLocalObjects();
+          // console.log("currentObject._id", currentObject._id);
           setUpdateObjectModal(false);
         }}
       >
@@ -293,22 +462,151 @@ export const EnvironmentManager = () => {
       </Button>
     </Container>
   );
+  // update environment
+  const updateEnvironment = async (_id, data) => {
+    // console.log(data, "dt");
+    try {
+      const response = await API.updateEnvironment(_id, data);
+      if (response.success) {
+        getEnvironments();
+        formikUptEnv.values.environmentName = "";
+        formikUptEnv.values.panorama = "";
+        formikUptEnv.values.preset = "";
+        formikUptEnv.values.video = "";
+        formikUptEnv.values.floorColor = currentEnv.floorColor;
+        formikUptEnv.values.skyColor = currentEnv.skyColor;
+        formikUptEnv.values.skyUrl = "";
+        notify("updateEnvironment successed");
+      } else {
+        notify("updateEnvironment  Failed");
+      }
+    } catch (err) {
+      setModalIsOpen(false);
+    }
+  };
+  let formikUptEnv = useFormik({
+    initialValues: {
+      environmentName: "",
+      panorama: "false",
+      preset: "",
+      video: "",
+      floorColor: currentEnv.floorColor,
+      skyColor: currentEnv.skyColor,
+      skyUrl: "",
+    },
+    validationSchema: () => {
+      return Yup.object().shape({
+        environmentName: Yup.string()
+          .max(255)
+          .required("environmentName Is Required"),
+
+        panorama: Yup.string().max(255),
+        preset: Yup.string().max(255),
+        video: Yup.string().max(255),
+        floorColor: Yup.string().max(255),
+        skyColor: Yup.string().max(255),
+        skyUrl: Yup.string().max(255),
+      });
+    },
+    onSubmit: async (values) => {
+      // const data = {
+      //   environmentName: values.environmentName,
+      //   panorama: values.panorama.toString(),
+      //   preset: values.preset,
+      //   video: values.video,
+      //   floorColor: values.floorColor,
+      //   skyColor: values.skyColor,
+      //   skyUrl: values.skyUrl,
+      // };
+      console.log(values);
+      // updateEnvironment(currentEnv._id, data);
+    },
+  });
+
+  let updateEnvironmentForm = (
+    <Container>
+      <Formik initialValues={formikUptEnv.initialValues}>
+        <form noValidate onSubmit={formikUptEnv.handleSubmit}>
+          <TextField
+            fullWidth
+            label="skyColor"
+            margin="normal"
+            name="skyColor"
+            type="text"
+            value={formikUptEnv.values.skyColor}
+            variant="outlined"
+            error={
+              formikUptEnv.touched.skyColor &&
+              Boolean(formikUptEnv.errors.skyColor)
+            }
+            helperText={
+              formikUptEnv.touched.skyColor && formikUptEnv.errors.skyColor
+            }
+            onBlur={formikUptEnv.handleBlur}
+            onChange={formikUptEnv.handleChange}
+          />{" "}
+          <TextField
+            fullWidth
+            label="floorColor"
+            margin="normal"
+            name="floorColor"
+            type="text"
+            value={formikUptEnv.values.floorColor}
+            variant="outlined"
+            error={
+              formikUptEnv.touched.floorColor &&
+              Boolean(formikUptEnv.errors.floorColor)
+            }
+            helperText={
+              formikUptEnv.touched.floorColor && formikUptEnv.errors.floorColor
+            }
+            onBlur={formikUptEnv.handleBlur}
+            onChange={formikUptEnv.handleChange}
+          />
+        </form>
+      </Formik>
+      <Button
+        size="median"
+        variant="contained"
+        onClick={() => {
+          const data = {
+            // environmentId: currentEnv._id,
+            environmentName: currentEnv.environmentName,
+            panorama: currentEnv.panorama.toString(),
+            preset: currentEnv.preset,
+            video: currentEnv.video,
+            skyUrl: currentEnv.skyUrl,
+            floorColor: formikUptEnv.values.floorColor,
+            skyColor: formikUptEnv.values.skyColor,
+          };
+          updateEnvironment(currentEnv._id, data);
+          console.log("currentEnv data", data);
+          setUpdateColorModal(false);
+        }}
+      >
+        update environment color
+      </Button>
+    </Container>
+  );
+
   //create environment
   const createEnvironment = async (data) => {
-    // console.log(data, "dt");
     try {
       const response = await API.createEnvironment(data);
       if (response.success) {
         getEnvironments();
         formik.values.environmentName = "";
-        formik.values.environmentCreator = "";
         formik.values.panorama = "";
         formik.values.preset = "";
         formik.values.video = "";
-        formik.values.floorColor = "";
-        formik.values.skyColor = "";
+        formik.values.floorColor = "green";
+        formik.values.skyColor = "blue";
         formik.values.skyUrl = "";
         setModalIsOpen(false);
+        setChoosenPreset("");
+        setEnvType("");
+        setChoosenSkyUrl("");
+        choosen360Video("");
         notify("environment Creation successed");
       } else {
         notify("environment Creation Failed");
@@ -320,56 +618,55 @@ export const EnvironmentManager = () => {
   let formik = useFormik({
     initialValues: {
       environmentName: "",
-      environmentCreator: "",
       panorama: "false",
       preset: "",
       video: "",
-      floorColor: "",
-      skyColor: "",
+      floorColor: "green",
+      skyColor: "blue",
       skyUrl: "",
-      // localObjectsId: "",
     },
     validationSchema: () => {
       return Yup.object().shape({
         environmentName: Yup.string()
           .max(255)
           .required("environmentName Is Required"),
-        environmentCreator: Yup.string()
-          .max(255)
-          .required("environmentCreator Is Required"),
+
         panorama: Yup.string().max(255),
         preset: Yup.string().max(255),
         video: Yup.string().max(255),
         floorColor: Yup.string().max(255),
         skyColor: Yup.string().max(255),
         skyUrl: Yup.string().max(255),
-        // localObjectsId: Yup.string().max(255),
       });
     },
     onSubmit: async (values) => {
       const data = {
         environmentName: values.environmentName,
-        environmentCreator: values.environmentCreator,
         panorama: values.panorama,
         preset: values.preset,
         video: values.video,
         floorColor: values.floorColor,
         skyColor: values.skyColor,
         skyUrl: values.skyUrl,
-        // localObjectsId: values.localObjectsId,
       };
       console.log(data);
       createEnvironment(data);
     },
   });
+  //handleTypeChange
   const handleTypeChange = (event) => {
     setEnvType(event.target.value);
     if (event.target.value === EnvironmentType[1]) {
       formik.values.panorama = "true";
+      setImageObjects(
+        PublicObjects.filter((x) => x.objectType === "360 Image")
+      );
+    } else if (event.target.value === EnvironmentType[0]) {
+      setvideoObjects(PublicObjects.filter((x) => x.objectType === "3D Video"));
     } else {
       formik.values.panorama = "false";
     }
-    console.log(formik.values.panorama, "pr");
+    // console.log(formik.values.panorama, "pr");
   };
 
   const handlePresetChange = (event) => {
@@ -409,27 +706,8 @@ export const EnvironmentManager = () => {
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
         />
-        <TextField
-          fullWidth
-          label="environmentCreator Name"
-          margin="normal"
-          name="environmentCreator"
-          type="text"
-          value={formik.values.environmentCreator}
-          variant="outlined"
-          error={
-            formik.touched.environmentCreator &&
-            Boolean(formik.errors.environmentCreator)
-          }
-          helperText={
-            formik.touched.environmentCreator &&
-            formik.errors.environmentCreator
-          }
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-        />
-        {/* <InputLabel>Choose Environment Type</InputLabel> */}
 
+        <Typography>Choose Environment Type</Typography>
         <Select value={envType} label="Env" onChange={handleTypeChange}>
           {EnvironmentType.map((data, i) => {
             return (
@@ -440,50 +718,63 @@ export const EnvironmentManager = () => {
           })}
         </Select>
         {envType === EnvironmentType[0] ? (
-          <Select
-            value={choosen360Video}
-            label="360 Video"
-            onChange={handleVideoChange}
-          >
-            {PublicObjects.map((data, i) => {
-              return (
-                <MenuItem value={data.url} key={i}>
-                  {data.objectName}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          <Box>
+            <Typography>Choose Video</Typography>
+            <FormControl fullWidth>
+              <Select
+                value={choosen360Video}
+                label="360 Video"
+                onChange={handleVideoChange}
+              >
+                {videoObjects.map((data, i) => {
+                  return (
+                    <MenuItem value={data.url} key={i}>
+                      {data.objectName}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
         ) : envType === EnvironmentType[1] ? (
           <Box>
             {" "}
-            <Select
-              value={choosenSkyUrl}
-              label="Sky Url"
-              onChange={handleSkyUrlChange}
-            >
-              {PublicObjects.map((data, i) => {
-                return (
-                  <MenuItem value={data.url} key={i}>
-                    {data.objectName}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+            <Typography>Choose Image</Typography>
+            <FormControl fullWidth>
+              <Select
+                value={choosenSkyUrl}
+                label="Sky Url"
+                onChange={handleSkyUrlChange}
+              >
+                {imageObjects.map((data, i) => {
+                  return (
+                    <MenuItem value={data.url} key={i}>
+                      {data.objectName}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </Box>
         ) : envType === EnvironmentType[2] ? (
-          <Select
-            label="preset"
-            onChange={handlePresetChange}
-            value={choosenPreset}
-          >
-            {presetOptions.map((data, i) => {
-              return (
-                <MenuItem value={data} key={i}>
-                  {data}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          <Box>
+            <Typography>Choose Preset</Typography>
+            <FormControl fullWidth>
+              <Select
+                label="preset"
+                onChange={handlePresetChange}
+                value={choosenPreset}
+              >
+                {presetOptions.map((data, i) => {
+                  return (
+                    <MenuItem value={data} key={i}>
+                      {data}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Box>
         ) : envType === EnvironmentType[3] ? (
           <Box>
             <TextField
@@ -556,10 +847,8 @@ export const EnvironmentManager = () => {
     async (_id) => {
       try {
         const response = await API.getEnvironmentById(_id);
-        // console.log("in this ID", _id);
         if (response.success) {
           setThisEnvDetail(response.data.localObjects);
-          // console.log("in thisEnvDetail :", thisEnvDetail);
         } else {
           setEnvironments([]);
           notify("Failed to Fetch Env List");
@@ -598,7 +887,7 @@ export const EnvironmentManager = () => {
           label="Object"
           onChange={handleObjectChange}
         >
-          {PublicObjects.map((data, i) => {
+          {normalObjects.map((data, i) => {
             return (
               <MenuItem value={data} key={i}>
                 {data.objectName}
@@ -615,54 +904,181 @@ export const EnvironmentManager = () => {
             margin="normal"
             name="objectName"
             type="text"
-            value={formik.values.objectName}
+            value={formikObj.values.objectName}
             variant="outlined"
             error={
-              formik.touched.objectName && Boolean(formik.errors.objectName)
+              formikObj.touched.objectName &&
+              Boolean(formikObj.errors.objectName)
             }
-            helperText={formik.touched.objectName && formik.errors.objectName}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
+            helperText={
+              formikObj.touched.objectName && formikObj.errors.objectName
+            }
+            onBlur={formikObj.handleBlur}
+            onChange={formikObj.handleChange}
           />
-          <TextField
-            fullWidth
-            label="position"
-            margin="normal"
-            name="position"
-            type="text"
-            value={formik.values.position}
-            variant="outlined"
-            error={formik.touched.position && Boolean(formik.errors.position)}
-            helperText={formik.touched.position && formik.errors.position}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="scale"
-            margin="normal"
-            name="scale"
-            type="text"
-            value={formik.values.scale}
-            variant="outlined"
-            error={formik.touched.scale && Boolean(formik.errors.scale)}
-            helperText={formik.touched.scale && formik.errors.scale}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="rotation "
-            margin="normal"
-            name="rotation"
-            type="text"
-            value={formik.values.rotation}
-            variant="outlined"
-            error={formik.touched.rotation && Boolean(formik.errors.rotation)}
-            helperText={formik.touched.rotation && formik.errors.rotation}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position X"
+                margin="normal"
+                name="positionx"
+                type="text"
+                value={formikObj.values.positionx}
+                variant="outlined"
+                error={
+                  formikObj.touched.positionx &&
+                  Boolean(formikObj.errors.positionx)
+                }
+                helperText={
+                  formikObj.touched.positionx && formikObj.errors.positionx
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Y"
+                margin="normal"
+                name="positiony"
+                type="text"
+                value={formikObj.values.positiony}
+                variant="outlined"
+                error={
+                  formikObj.touched.positiony &&
+                  Boolean(formikObj.errors.positiony)
+                }
+                helperText={
+                  formikObj.touched.positiony && formikObj.errors.positiony
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="position Z"
+                margin="normal"
+                name="positionz"
+                type="text"
+                value={formikObj.values.positionz}
+                variant="outlined"
+                error={
+                  formikObj.touched.positionz &&
+                  Boolean(formikObj.errors.positionz)
+                }
+                helperText={
+                  formikObj.touched.positionz && formikObj.errors.positionz
+                }
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale X"
+                margin="normal"
+                name="scalex"
+                type="text"
+                value={formikObj.values.scalex}
+                variant="outlined"
+                error={formikObj.touched.scalex && Boolean(formikObj.errors.scalex)}
+                helperText={formikObj.touched.scalex && formikObj.errors.scalex}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Y"
+                margin="normal"
+                name="scaley"
+                type="text"
+                value={formikObj.values.scaley}
+                variant="outlined"
+                error={formikObj.touched.scaley && Boolean(formikObj.errors.scaley)}
+                helperText={formikObj.touched.scaley && formikObj.errors.scaley}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="scale Z"
+                margin="normal"
+                name="scalez"
+                type="text"
+                value={formikObj.values.scalez}
+                variant="outlined"
+                error={formikObj.touched.scalez && Boolean(formikObj.errors.scalez)}
+                helperText={formikObj.touched.scalez && formikObj.errors.scalez}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation X"
+                margin="normal"
+                name="rotationx"
+                type="text"
+                value={formikObj.values.rotationx}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationx && Boolean(formikObj.errors.rotationx)
+                }
+                helperText={formikObj.touched.rotationx && formikObj.errors.rotationx}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Y"
+                margin="normal"
+                name="rotationy"
+                type="text"
+                value={formikObj.values.rotationy}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationy && Boolean(formikObj.errors.rotationy)
+                }
+                helperText={formikObj.touched.rotationy && formikObj.errors.rotationy}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="rotation Z"
+                margin="normal"
+                name="rotationz"
+                type="text"
+                value={formikObj.values.rotationz}
+                variant="outlined"
+                error={
+                  formikObj.touched.rotationz && Boolean(formikObj.errors.rotationz)
+                }
+                helperText={formikObj.touched.rotationz && formikObj.errors.rotationz}
+                onBlur={formikObj.handleBlur}
+                onChange={formikObj.handleChange}
+              />
+            </Grid>
+          </Grid>
         </form>
       </Formik>
       <Button
@@ -671,15 +1087,14 @@ export const EnvironmentManager = () => {
         onClick={() => {
           const data = {
             environmentId: currentEnv._id,
-            objectName: formik.values.objectName,
-            position: formik.values.position,
-            scale: formik.values.scale,
-            rotation: formik.values.rotation,
+            objectName: formikObj.values.objectName,
+            position: [formikObj.values.positionx,formikObj.values.positiony,formikObj.values.positionz].join(' '),
+            scale: [formikObj.values.scalex,formikObj.values.scaley,formikObj.values.scalez].join(' '),
+            rotation: [formikObj.values.rotationx,formikObj.values.rotationy,formikObj.values.rotationz].join(' '),
             url: selectedPublicObject.url,
           };
           console.log(data);
           createLocalObject(data);
-          // getLocalObjects();
           setaddObjectToEnvModal(false);
         }}
       >
@@ -734,6 +1149,16 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
+                        _________________
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
                         Position: {data.position}
                       </Typography>
                       <Typography
@@ -764,6 +1189,16 @@ export const EnvironmentManager = () => {
                         }}
                         gutterBottom
                       >
+                        _________________
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
                         <Link href={data.url}>Download this model </Link>
                       </Typography>
                     </div>
@@ -772,9 +1207,18 @@ export const EnvironmentManager = () => {
                     <Button
                       size="small"
                       onClick={() => {
-                        formikUpt.values.position = data.position;
-                        formikUpt.values.scale = data.scale;
-                        formikUpt.values.rotation = data.rotation;
+                        const positions = data.position.split(" ");
+                        const scales = data.scale.split(" ");
+                        const rotations = data.rotation.split(" ");
+                        formikUpt.values.positionx = positions[0];
+                        formikUpt.values.positiony = positions[1];
+                        formikUpt.values.positionz = positions[2];
+                        formikUpt.values.scalex = scales[0];
+                        formikUpt.values.scaley = scales[1];
+                        formikUpt.values.scalez = scales[2];
+                        formikUpt.values.rotationx = rotations[0];
+                        formikUpt.values.rotationy = rotations[1];
+                        formikUpt.values.rotationz = rotations[2];
                         formikUpt.values.url = data.url;
                         setCurrentObject(data);
                         setUpdateObjectModal(true);
@@ -804,93 +1248,121 @@ export const EnvironmentManager = () => {
   );
 
   let environmentsCard = (
-    <Grid Container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    <Grid container spacing={2}>
       {environments.length > 0 ? (
         environments.map((data) => {
           return (
-            <Box key={data._id} mb={4}>
-              <Card width={50}>
-                <CardContent>
-                  <div style={{ width: 300, whiteSpace: "nowrap" }}>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
+            <Grid item xs={6} key={data._id}>
+              <Box mb={4}>
+                <Card width={50}>
+                  <CardContent>
+                    <div style={{ width: 300, whiteSpace: "nowrap" }}>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Name: {data.environmentName}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Creator: {data.environmentCreator}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Panorama:{data.panorama.toString()}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        {data.preset.length > 0 ? (
+                          <Typography>Preset:{data.preset} </Typography>
+                        ) : (
+                          <Typography></Typography>
+                        )}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        {data.video.length > 4 ? (
+                          <Link href={data.video}>Download Link </Link>
+                        ) : (
+                          <Typography></Typography>
+                        )}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setEnvModal(true);
+                        setCurrentEnv(data);
+                        getEnvironmentById(data._id);
+                        setNormalObjects(
+                          PublicObjects.filter(
+                            (x) => x.objectType === "3D Object"
+                          )
+                        );
                       }}
-                      gutterBottom
                     >
-                      Name: {data.environmentName}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
+                      Manage Objects
+                    </Button>
+                    <Button size="small" href={`/preview/` + data._id}>
+                      Preview
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        deleteEnvironment(data);
                       }}
-                      gutterBottom
                     >
-                      Creator: {data.environmentCreator}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      }}
-                      gutterBottom
-                    >
-                      Panorama:{data.panorama.toString()}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      }}
-                      gutterBottom
-                    >
-                      Preset:{data.preset}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      }}
-                      gutterBottom
-                    >
-                      {/* Video:{data.video} */}
-                      <Link href={data.video}>Download video </Link>
-                    </Typography>
-                  </div>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      setEnvModal(true);
-                      setCurrentEnv(data);
-                      console.log("env id: ---", data._id);
-                      getEnvironmentById(data._id);
-                    }}
-                  >
-                    Manage Objects
-                  </Button>
-                  <Button size="small" href={`/preview/` + data._id}>
-                    Preview
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      deleteEnvironment(data);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>{" "}
-            </Box>
+                      Delete
+                    </Button>
+                    {data.panorama.toString() === "false" &&
+                    data.preset.length === 0 &&
+                    data.video.length === 0 ? (
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            formikUptEnv.values.floorColor = data.floorColor;
+                            formikUptEnv.values.skyColor = data.skyColor;
+                            setCurrentEnv(data);
+                            setUpdateColorModal(true);
+                          }}
+                        >
+                        Update Color
+                        </Button>
+                      ) : null}
+                  </CardActions>
+                </Card>{" "}
+              </Box>
+            </Grid>
           );
         })
       ) : (
@@ -899,212 +1371,54 @@ export const EnvironmentManager = () => {
     </Grid>
   );
   return (
-    <Box sx={LayoutConfig.defaultContainerSX}>
-      <Container
-        style={{
-          margin: "auto auto",
+    <Box sx={{ mx: 4 }}>
+      {/* create environment modal */}
+      <EnhancedModal
+        isOpen={modalIsOpen}
+        dialogTitle={`create Envorionment`}
+        dialogContent={createEnvorionmentModal}
+        options={{
+          onClose: () => setModalIsOpen(false),
+          disableSubmit: true,
         }}
-        maxWidth="md"
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          px: {
-            md: "130px !important",
-          },
+      />
+      {/* env detail, after click object/detail in card */}
+      <EnhancedModal
+        isOpen={envModal}
+        dialogTitle={currentEnv.environmentName}
+        dialogContent={envDetail}
+        options={{
+          onClose: () => setEnvModal(false),
+          disableSubmit: true,
         }}
+      />
+      {/* update local object modal */}
+      <EnhancedModal
+        isOpen={updateObjectModal}
+        dialogTitle={selectedPublicObject.objectName}
+        dialogContent={updateObject}
+        options={{
+          onClose: () => setUpdateObjectModal(false),
+          disableSubmit: true,
+        }}
+      />
+      <EnhancedModal
+        isOpen={updateColorModal}
+        dialogTitle={currentEnv.environmentName}
+        dialogContent={updateEnvironmentForm}
+        options={{
+          onClose: () => setUpdateColorModal(false),
+          disableSubmit: true,
+        }}
+      />
+      <Button
+        sx={{ my: 2 }}
+        variant="contained"
+        onClick={() => setModalIsOpen(true)}
       >
-        {/* create environment modal */}
-        <EnhancedModal
-          isOpen={modalIsOpen}
-          dialogTitle={`create Envorionment`}
-          dialogContent={createEnvorionmentModal}
-          options={{
-            onClose: () => setModalIsOpen(false),
-            disableSubmit: true,
-          }}
-        />
-        {/* env detail, after click object/detail in card */}
-        <EnhancedModal
-          isOpen={envModal}
-          dialogTitle={currentEnv.environmentName}
-          dialogContent={envDetail}
-          options={{
-            onClose: () => setEnvModal(false),
-            disableSubmit: true,
-          }}
-        />
-        {/* update local object modal */}
-        <EnhancedModal
-          isOpen={updateObjectModal}
-          dialogTitle={selectedPublicObject.objectName}
-          dialogContent={updateObject}
-          options={{
-            onClose: () => setUpdateObjectModal(false),
-            disableSubmit: true,
-          }}
-        />
-        <Button
-          size="middle"
-          variant="contained"
-          onClick={() => setModalIsOpen(true)}
-        >
-          Create Environment
-        </Button>
-        {environmentsCard}
-        {/* <EnhancedTable
-          data={environments}
-          title="environments Manager"
-          options={{
-            ignoreKeys: [
-              // "_id",
-              "deakinSSO",
-              "firstLogin",
-              "emailVerified",
-              "isBlocked",
-              "__v",
-              "createdAt",
-              "_id",
-            ],
-          }}
-        /> */}
-      </Container>
+        Create Environment
+      </Button>
+      {environmentsCard}
     </Box>
   );
 };
-{
-  /* <Formik initialValues={formik.initialValues}>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            label="Environment Name"
-            margin="normal"
-            name="environmentName"
-            type="text"
-            value={formik.values.environmentName}
-            variant="outlined"
-            error={
-              formik.touched.environmentName &&
-              Boolean(formik.errors.environmentName)
-            }
-            helperText={
-              formik.touched.environmentName && formik.errors.environmentName
-            }
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="environmentCreator Name"
-            margin="normal"
-            name="environmentCreator"
-            type="text"
-            value={formik.values.environmentCreator}
-            variant="outlined"
-            error={
-              formik.touched.environmentCreator &&
-              Boolean(formik.errors.environmentCreator)
-            }
-            helperText={
-              formik.touched.environmentCreator &&
-              formik.errors.environmentCreator
-            }
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="panorama "
-            margin="normal"
-            name="panorama"
-            type="text"
-            value={formik.values.panorama}
-            variant="outlined"
-            error={formik.touched.panorama && Boolean(formik.errors.panorama)}
-            helperText={formik.touched.panorama && formik.errors.panorama}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="preset "
-            margin="normal"
-            name="preset"
-            type="text"
-            value={formik.values.preset}
-            variant="outlined"
-            error={formik.touched.preset && Boolean(formik.errors.preset)}
-            helperText={formik.touched.preset && formik.errors.preset}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="video "
-            margin="normal"
-            name="video"
-            type="text"
-            value={formik.values.video}
-            variant="outlined"
-            error={formik.touched.video && Boolean(formik.errors.video)}
-            helperText={formik.touched.video && formik.errors.video}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="floorColor"
-            margin="normal"
-            name="floorColor"
-            type="text"
-            value={formik.values.floorColor}
-            variant="outlined"
-            error={
-              formik.touched.floorColor && Boolean(formik.errors.floorColor)
-            }
-            helperText={formik.touched.floorColor && formik.errors.floorColor}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="skyColor"
-            margin="normal"
-            name="skyColor"
-            type="text"
-            value={formik.values.skyColor}
-            variant="outlined"
-            error={formik.touched.skyColor && Boolean(formik.errors.skyColor)}
-            helperText={formik.touched.skyColor && formik.errors.skyColor}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <TextField
-            fullWidth
-            label="skyUrl"
-            margin="normal"
-            name="skyUrl"
-            type="text"
-            value={formik.values.skyUrl}
-            variant="outlined"
-            error={formik.touched.skyUrl && Boolean(formik.errors.skyUrl)}
-            helperText={formik.touched.skyUrl && formik.errors.skyUrl}
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-
-          <Box sx={{ mt: 2 }}>
-            <Button
-              color="primary"
-              disabled={formik.isSubmitting}
-              size="large"
-              variant="contained"
-              type="submit"
-              onClick={() => setModalIsOpen(false)}
-            >
-              Create Environment
-            </Button>
-          </Box>
-        </form>
-      </Formik> */
-}

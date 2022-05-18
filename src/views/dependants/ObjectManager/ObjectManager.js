@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   Typography,
   TextField,
   Button,
@@ -9,8 +8,11 @@ import {
   Grid,
   CardActions,
   Link,
+  MenuItem,
+  Select,
+  FormControl,
 } from "@mui/material";
-import { LayoutConfig } from "constants/index";
+
 import { useState, useCallback, useEffect } from "react";
 import { useIsMountedRef } from "../../../helpers/hooks/index";
 import { notify, EnhancedModal } from "components/index";
@@ -28,21 +30,8 @@ export const ObjectManager = () => {
   const isMounted = useIsMountedRef();
   // create public object
   const [creatObjectModal, setCreatObjectModal] = useState(false);
-  //getLocalObjects
-  // const getLocalObjects = useCallback(async () => {
-  //   try {
-  //     const response = await API.getLocalObjects();
-  //     console.log("res----->", response.data.data);
-  //     if (response.success) setObjects(response.data.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, [isMounted]);
-
-  // useEffect(() => {
-  //   getLocalObjects();
-  // }, [getLocalObjects]);
-  //getPublicObjects
+  const [objectType, setObjectType] = useState("");
+  const objectTypeOptions = ["3D Object", "360 Image", "3D Video"];
   const getPublicObjects = useCallback(async () => {
     try {
       const response = await API.getPublicObjects();
@@ -73,14 +62,16 @@ export const ObjectManager = () => {
     try {
       const response = await API.createPublicObject(data);
       if (response.success) {
-        // formik.values.dataURL = s3url;
+        formik.values.objectType = "";
         formik.values.url = s3url;
         formik.values.objectName = "";
         setCreatObjectModal(false);
         setS3url("");
+        setObjectType("");
+        setIsFilePicked(false);
         getPublicObjects();
       } else {
-        notify("data entry Creation Failed!!");
+        notify("object Creation Failed!!");
       }
     } catch (err) {
       setCreatObjectModal(false);
@@ -90,6 +81,7 @@ export const ObjectManager = () => {
   let formik = useFormik({
     initialValues: {
       objectName: "",
+      objectType: "object",
     },
     validationSchema: () => {
       return Yup.object().shape({
@@ -104,6 +96,7 @@ export const ObjectManager = () => {
       const data = {
         url: s3url,
         objectName: values.objectName,
+        objectType: values.objectType,
       };
       console.log("data---->", data);
       createPublicObject(data);
@@ -111,7 +104,6 @@ export const ObjectManager = () => {
   });
 
   const uploadDataset = async (data) => {
-    // console.log(data, "dt");
     try {
       const response = await API.uploadDocument(data);
       if (response.success) {
@@ -120,7 +112,6 @@ export const ObjectManager = () => {
         notify("Data Uploading Failed!!");
       }
     } catch (err) {
-      // setDataModalOpen(false);
       console.log(err);
     }
   };
@@ -152,50 +143,66 @@ export const ObjectManager = () => {
   }, [handleSubmission]);
 
   let displayObjects = (
-    <Grid Container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    <Grid container spacing={2}>
       {PublicObjects.length > 0 ? (
         PublicObjects.map((data) => {
           return (
-            <Box key={data._id} mb={4}>
-              <Card width={50}>
-                <CardContent>
-                  <div style={{ width: 300, whiteSpace: "nowrap" }}>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
+            <Grid item xs={4} key={data._id}>
+              <Box mb={4}>
+                <Card width={50}>
+                  <CardContent>
+                    <div style={{ width: 300, whiteSpace: "nowrap" }}>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        object Name: {data.objectName}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        Object Type: {data.objectType}
+                      </Typography>
+                      <Typography
+                        component="div"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                        }}
+                        gutterBottom
+                      >
+                        {/* {data.url} */}
+                        {data.url.length > 4 ? (
+                          <Link href={data.url}>Download model </Link>
+                        ) : (
+                          <Typography>No Link Available</Typography>
+                        )}
+                        {/* <Link href={data.url}>Download model </Link> */}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        deletePublicObject(data);
                       }}
-                      gutterBottom
                     >
-                      {data.objectName}
-                      {/* {data._id} */}
-                    </Typography>
-                    <Typography
-                      component="div"
-                      sx={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      }}
-                      gutterBottom
-                    >
-                      {/* {data.url} */}
-                      <Link href={data.url}>Download model </Link>
-                    </Typography>
-                  </div>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      deletePublicObject(data);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>{" "}
-            </Box>
+                      Delete
+                    </Button>
+                  </CardActions>
+                </Card>{" "}
+              </Box>
+            </Grid>
           );
         })
       ) : (
@@ -207,8 +214,24 @@ export const ObjectManager = () => {
     handleSubmission();
   }, [selectedFile]);
 
+  const handleTypeChange = (event) => {
+    setObjectType(event.target.value);
+    formik.values.objectType = event.target.value;
+    console.log("event.target.value:", event.target.value);
+  };
+
   let uploadObjectModal = (
-    <Container>
+    <FormControl fullWidth>
+      <Typography>Choose File Type</Typography>
+      <Select value={objectType} label="Object" onChange={handleTypeChange}>
+        {objectTypeOptions.map((data, i) => {
+          return (
+            <MenuItem value={data} key={i}>
+              {data}
+            </MenuItem>
+          );
+        })}
+      </Select>
       <div className="App">
         <input type="file" name="documentFile" onChange={changeHandler} />
         {isFilePicked ? (
@@ -255,115 +278,43 @@ export const ObjectManager = () => {
               >
                 Create Public Object
               </Button>
+              <Button
+                color="secondary"
+                disabled={formik.isSubmitting}
+                size="large"
+                variant="contained"
+                type="close"
+                onClick={() => setCreatObjectModal(false)}
+              >
+                Close
+              </Button>
             </form>
           </Formik>
         </Box>
       </div>
-    </Container>
+    </FormControl>
   );
 
   return (
-    <Box sx={LayoutConfig.defaultContainerSX}>
-      <Container
-        style={{
-          margin: "auto auto",
+    <Box sx={{ mx: 4 }}>
+      <EnhancedModal
+        isOpen={creatObjectModal}
+        dialogTitle={`Create New Objecct`}
+        dialogContent={uploadObjectModal}
+        options={{
+          // onClose: () => setCreatObjectModal(false),
+          disableSubmit: true,
+          disableClose: true,
         }}
-        maxWidth="md"
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          px: {
-            md: "130px !important",
-          },
-        }}
+      />
+      <Button
+        sx={{ my: 2 }}
+        variant="contained"
+        onClick={() => setCreatObjectModal(true)}
       >
-        <EnhancedModal
-          isOpen={creatObjectModal}
-          dialogTitle={`create new Objecct`}
-          dialogContent={uploadObjectModal}
-          options={{
-            onClose: () => setCreatObjectModal(false),
-            disableSubmit: true,
-            // disableClose: true,
-          }}
-        />
-        <Button
-          // size="middle"
-          variant="contained"
-          onClick={() => setCreatObjectModal(true)}
-        >
-          Upload Data
-        </Button>
-        {/* <EnhancedTable
-          data={PublicObjects}
-          title="Public Objects Manager"
-          options={{
-            ignoreKeys: [
-              "_id",
-              "deakinSSO",
-              "firstLogin",
-              "emailVerified",
-              "isBlocked",
-              "__v",
-              "createdAt",
-            ],
-          }}
-        /> */}
-        {displayObjects}
-      </Container>
+        Upload Data
+      </Button>
+      {displayObjects}
     </Box>
   );
 };
-
-// let displayObjects = (
-//   <Grid Container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-//     {objects.length > 0 ? (
-//       objects.map((data) => {
-//         return (
-//           <Box key={data._id} mb={4}>
-//             <Card width={50}>
-//               <CardContent>
-//                 <div style={{ width: 300, whiteSpace: "nowrap" }}>
-//                   <Typography
-//                     component="div"
-//                     sx={{
-//                       textOverflow: "ellipsis",
-//                       overflow: "hidden",
-//                     }}
-//                     gutterBottom
-//                   >
-//                     {data.name}
-//                     {/* {data._id} */}
-//                   </Typography>
-//                   <Typography
-//                     component="div"
-//                     sx={{
-//                       textOverflow: "ellipsis",
-//                       overflow: "hidden",
-//                     }}
-//                     gutterBottom
-//                   >
-//                     {/* {data.dataURL} */}
-//                   </Typography>
-//                   <Typography
-//                     component="div"
-//                     sx={{
-//                       textOverflow: "ellipsis",
-//                       overflow: "hidden",
-//                     }}
-//                     gutterBottom
-//                   >
-//                     {/* {data.description} */}
-//                   </Typography>
-//                 </div>
-//               </CardContent>
-//             </Card>{" "}
-//           </Box>
-//         );
-//       })
-//     ) : (
-//       <Typography>No Data Available</Typography>
-//     )}
-//   </Grid>
-// );
